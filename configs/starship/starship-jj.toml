@@ -1,0 +1,67 @@
+"$schema" = "https://gitlab.com/lanastara_foss/-/raw/main/schema.json"
+module_separator = " "
+reset_color = false
+
+[[module]]
+type = "Bookmarks"
+color.TrueColor = [16, 16, 16]
+bg_color.TrueColor = [244, 219, 214]
+separator = ", "
+max_bookmarks = 3
+max_length = 24
+surround_with_quotes = false
+
+[[module]]
+type = "Commit"
+color.TrueColor = [16, 16, 16]
+bg_color.TrueColor = [244, 219, 214]
+max_length = 16
+show_previous_if_empty = true
+surround_with_quotes = false
+[module.change]
+color.TrueColor = [136, 16, 120]
+bg_color.TrueColor = [244, 219, 214]
+[module.non_unique]
+color = "Black"
+bg_color.TrueColor = [244, 219, 214]
+
+[[module]]
+type = "State"
+color.TrueColor = [16, 16, 16]
+bg_color.TrueColor = [244, 219, 214]
+separator = " "
+[module.conflict]
+text = "conflict"
+color.TrueColor = [239, 16, 16]
+bg_color.TrueColor = [244, 219, 214]
+[module.divergent]
+text = "divergent"
+color.TrueColor = [239, 16, 223]
+bg_color.TrueColor = [244, 219, 214]
+[module.hidden]
+text = "hidden"
+color = "Black"
+bg_color.TrueColor = [244, 219, 214]
+[module.immmutable]
+disabled = true
+text = ""
+[module.empty]
+disabled = true
+text = ""
+
+[[module]]
+type = "Metrics"
+color.TrueColor = [16, 16, 16]
+bg_color.TrueColor = [244, 219, 214]
+hide_if_empty = true
+[module.changed_files]
+color.TrueColor = [16, 16, 16]
+bg_color.TrueColor = [244, 219, 214]
+[module.added_lines]
+prefix = "+"
+color.TrueColor = [16, 16, 16]
+bg_color.TrueColor = [244, 219, 214]
+[module.removed_lines]
+prefix = "-"
+color.TrueColor = [16, 16, 16]
+bg_color.TrueColor = [244, 219, 214]

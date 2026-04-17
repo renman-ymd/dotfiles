@@ -112,9 +112,8 @@
         "rust"
         "golang"
         "python"
-	"bun"
+        "bun"
         "history"
-        "colored-man-pages"
         "copypath"
         "copyfile"
         "web-search"
@@ -140,6 +139,9 @@
 
       export LESS="-RFMiS --incsearch --use-color -j.5"
       export DELTA_PAGER="less -RFEX --mouse --wheel-lines=3"
+
+      export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+      export MANROFFOPT="-c"
 
       # lazy-load autocompletion for jj (~50ms) rather than on every shell start
       jj() {
@@ -221,7 +223,7 @@
       $env.LESS = "-RFMiS --incsearch --use-color -j.5"
       $env.DELTA_PAGER = "less -RFEX --mouse --wheel-lines=3"
 
-      $env.MANPAGER = "bat -l man -p"
+      $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
       $env.MANROFFOPT = "-c"
 
       # $env.NU_LIB_DIRS = (

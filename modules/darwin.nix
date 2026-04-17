@@ -28,7 +28,11 @@
       "utm"
       "nvidia-geforce-now"
     ];
-    brews = [ "odin" ];
+    brews = [
+      "odin"
+      "odinfmt"
+      "ols"
+    ];
     masApps = {
       "Whuthering Waves" = 6475033368;
     };

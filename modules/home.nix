@@ -54,8 +54,8 @@
 
     # --- Miscellaneous ---
     vesktop
-    # jj-starship
     starship-jj
+    alt-tab-macos # This drives me crazy
     pinentry_mac
   ];
 

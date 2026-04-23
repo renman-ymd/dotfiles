@@ -93,6 +93,13 @@
 ;; ── Nix ──────────────────────────────────────────────────────────────
 (use-package nix-mode :mode "\\.nix\\'")
 
+;; —— SmallTalk / Pharo ————————————————————————————————————————————————
+(use-package smalltalk-mode
+  :mode ("\\.st\\'"
+         "\\.class\\.st\\'"
+         "\\.extension\\.st\\'"
+         "\\.package\\.st\\'"))
+
 ;; ── Duplicate line ───────────────────────────────────────────────────
 (defun my/duplicate-line ()
   "Duplicate the current line below."

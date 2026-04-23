@@ -127,14 +127,6 @@
   ;; system clipboard via the terminal's OSC 52 support.
   (setq clipetty-assume-nested-mux nil))
 
-;; Fallback: xclip for local X11/Wayland sessions where OSC 52
-;; might not be available (e.g., some Wayland compositors).
-;; xclip.el detects xclip, xsel, or wl-copy automatically.
-(use-package xclip
-  :unless (display-graphic-p)
-  :config
-  (xclip-mode 1))
-
 ;; ╔═══════════════════════════════════════════════════════════════════╗
 ;; ║  4. UI / THEME                                                    ║
 ;; ╚═══════════════════════════════════════════════════════════════════╝
@@ -492,11 +484,11 @@
          (js-ts-mode         . lsp-deferred)
          (typescript-ts-mode . lsp-deferred)
          (tsx-ts-mode        . lsp-deferred)
-         (java-ts-mode       . lsp-deferred)
+         ;; (java-ts-mode       . lsp-deferred)
          (haskell-mode       . lsp-deferred)
          (zig-mode           . lsp-deferred)
          (nix-mode           . lsp-deferred)
-         (astro-ts-mode      . lsp-deferred)
+         ;; (astro-ts-mode      . lsp-deferred)
          (kotlin-mode        . lsp-deferred))
   :custom
   (lsp-keymap-prefix "C-c l")           ; C-c l as LSP prefix
@@ -519,9 +511,10 @@
   ;; rls: deprecated Rust Language Server, superseded by rust-analyzer.
   (setq lsp-disabled-clients '(semgrep-lsp rls))
 
-  ;; Tailwind CSS LSP (for React/Astro/HTML)
-  (with-eval-after-load 'lsp-mode
-    (add-to-list 'lsp-language-id-configuration '(astro-ts-mode . "astro"))))
+  ;; ;; Tailwind CSS LSP (for React/Astro/HTML)
+  ;; (with-eval-after-load 'lsp-mode
+  ;;   (add-to-list 'lsp-language-id-configuration '(astro-ts-mode . "astro"))))
+  )
 
 ;; lsp-ui — inline diagnostics, peek, sideline
 ;; This is the closest to VS Code's "Error Lens" and "Pretty TS Errors".
@@ -616,6 +609,13 @@
 (use-package kotlin-mode
   :mode "\\.kt\\'")
 
+;; —— SmallTalk / Pharo ————————————————————————————————————————————————
+(use-package smalltalk-mode
+  :mode ("\\.st\\'"
+         "\\.class\\.st\\'"
+         "\\.extension\\.st\\'"
+         "\\package\\.st\\'"))
+
 ;; ── Web (HTML/JSX/TSX/Astro auto-close & rename tags) ────────────────
 ;; web-mode handles auto-close and auto-rename of tags.
 (use-package web-mode
@@ -663,9 +663,9 @@
 
 ;; ── Tailwind CSS ─────────────────────────────────────────────────────
 ;; lsp-tailwindcss provides LSP support for Tailwind.
-(use-package lsp-tailwindcss
-  :after lsp-mode
-  :init (setq lsp-tailwindcss-add-on-mode t))
+;; (use-package lsp-tailwindcss
+;;   :after lsp-mode
+;;   :init (setq lsp-tailwindcss-add-on-mode t))
 
 ;; ── x86 Assembly ─────────────────────────────────────────────────────
 (use-package nasm-mode
@@ -771,28 +771,28 @@
 ;;   Permission requests show y/n/! bindings.
 ;;   The agent can read/write files in your project.
 
-(use-package shell-maker
-  :ensure t)
+;; (use-package shell-maker
+;;   :ensure t)
 
-(use-package acp
-  :vc (:url "https://github.com/xenodium/acp.el")
-  :ensure t)
+;; (use-package acp
+;;   :vc (:url "https://github.com/xenodium/acp.el")
+;;   :ensure t)
 
-(use-package agent-shell
-  :vc (:url "https://github.com/xenodium/agent-shell")
-  :after (shell-maker acp)
-  :bind (("C-c a c" . agent-shell-anthropic-start-claude-code)
-         ("C-c a a" . agent-shell)       ; pick from all agents
-         ("C-c a t" . agent-shell-toggle)) ; toggle current agent
-  :config
-  ;; Use login-based auth (your Claude subscription, no API key).
-  (setq agent-shell-anthropic-authentication
-        (agent-shell-anthropic-make-authentication :login t))
+;; (use-package agent-shell
+;;   :vc (:url "https://github.com/xenodium/agent-shell")
+;;   :after (shell-maker acp)
+;;   :bind (("C-c a c" . agent-shell-anthropic-start-claude-code)
+;;          ("C-c a a" . agent-shell)       ; pick from all agents
+;;          ("C-c a t" . agent-shell-toggle)) ; toggle current agent
+;;   :config
+;;   ;; Use login-based auth (your Claude subscription, no API key).
+;;   (setq agent-shell-anthropic-authentication
+;;         (agent-shell-anthropic-make-authentication :login t))
 
-  ;; Inherit PATH and other env vars so Claude Code can find
-  ;; your tools (LSP servers, jj, cargo, etc.)
-  (setq agent-shell-anthropic-claude-environment
-        (agent-shell-make-environment-variables :inherit-env t)))
+;;   ;; Inherit PATH and other env vars so Claude Code can find
+;;   ;; your tools (LSP servers, jj, cargo, etc.)
+;;   (setq agent-shell-anthropic-claude-environment
+;;         (agent-shell-make-environment-variables :inherit-env t)))
 
 ;; ╔═══════════════════════════════════════════════════════════════════╗
 ;; ║ 16. TERMINAL EMULATOR                                             ║
@@ -808,7 +808,9 @@
   :bind ("C-c t" . my/vterm-toggle)
   :custom
   (vterm-max-scrollback 10000)
-  (vterm-shell "/bin/zsh")
+  (vterm-shell (or (executable-find "nu")
+                   (executable-find "zsh")
+                   shell-file-name))
   :config
   ;; Toggle vterm in a bottom window (like VS Code integrated terminal).
   (defun my/vterm-toggle ()

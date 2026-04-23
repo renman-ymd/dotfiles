@@ -90,7 +90,8 @@
       em = "emacsclient -s main -nw";
       emg = "emacsclient -s main -c";
       eml = "emacs -nw --init-dir ~/.config/emacs-light";
-      emkill = "emacsclient -s main --eval '(kill-emacs)'";
+      em-kill = "emacsclient -s main --eval '(kill-emacs)'";
+      em-restart = ''launchctl kickstart -k "gui/$(id -u)/org.gnu.emacs.daemon"'';
     };
 
     # initExtraBeforeCompInit = ''
@@ -195,7 +196,8 @@
       em = "emacsclient -s main -nw";
       emg = "emacsclient -s main -c";
       eml = "emacs -nw --init-dir ~/.config/emacs-light";
-      # emkill defined as def below: parenthesis interpretation
+      # em-kill defined as def below: parenthesis interpretation
+      # em-restart defined as def below: string interpolation
     };
 
     extraEnv = ''
@@ -265,8 +267,12 @@
         }
       }
 
-      def emkill [] {
+      def em-kill [] {
         ^emacsclient -s main --eval "(kill-emacs)"
+      }
+
+      def em-restart [] {
+          ^launchctl kickstart -k $"gui/$(^id -u | str trim)/org.gnu.emacs.daemon"
       }
 
       $env.config.keybindings ++= [{

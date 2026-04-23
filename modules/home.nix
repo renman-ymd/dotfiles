@@ -52,11 +52,17 @@
     frogmouth   # Full TUI browser
     go-grip     # Browser preview + live reload
 
+    # --- Document & media ---
+    pandoc
+    poppler
+    wakatime-cli # Private key to write to ~/.wakatime.cfg
+
     # --- Miscellaneous ---
     vesktop
     starship-jj
     alt-tab-macos # This drives me crazy
     pinentry_mac
+    glibtool
   ];
 
   home.file.".gnupg/gpg-agent.conf".text = ''
@@ -272,7 +278,7 @@
       }
 
       def em-restart [] {
-          ^launchctl kickstart -k $"gui/$(^id -u | str trim)/org.gnu.emacs.daemon"
+          ^launchctl kickstart -k $"gui/(^id -u | str trim)/org.gnu.emacs.daemon"
       }
 
       $env.config.keybindings ++= [{

@@ -61,10 +61,9 @@
         "${pkgs.emacs-macport}/bin/emacs"
         "--fg-daemon=main"
       ];
-      # Ghostty stores its terminfo inside the.app bundle and sets $TERMINFO
-      # Passing it here make the daemon aware of xterm-ghostty
+      # Passing the ghostyy terminfo here make the daemon aware of xterm-ghostty
       EnvironmentVariables = {
-        TERMINFO = "/Applications/Ghostty.app/Contents/Resources/terminfo";
+        TERMINFO = "${pkgs.ghostty-bin.terminfo}/share/terminfo";
       };
       RunAtLoad = true;
       LimitLoadToSessionType = "Aqua";

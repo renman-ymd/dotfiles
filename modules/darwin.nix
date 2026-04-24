@@ -68,6 +68,7 @@
       # Passing the ghostyy terminfo here make the daemon aware of xterm-ghostty
       EnvironmentVariables = {
         TERMINFO = "${pkgs.ghostty-bin.terminfo}/share/terminfo";
+        PATH = "${config.users.users."renman-ymd".home}/.nix-profile/bin:/etc/profiles/per-user/renman-ymd/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin";
       };
       RunAtLoad = true;
       LimitLoadToSessionType = "Aqua";

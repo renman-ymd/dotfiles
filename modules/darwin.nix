@@ -1,10 +1,10 @@
-{ pkgs, lixpkg, ... }: {
+{ pkgs, lixpkg, config, ... }: {
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   # Use Lix as the Nix implementation
   nix.package = lixpkg;
-  
+
   # zsh stays as the login shell (POSIX-compliant)
   programs.zsh.enable = true;
 
@@ -60,6 +60,10 @@
       ProgramArguments = [
         "${pkgs.emacs-macport}/bin/emacs"
         "--fg-daemon=main"
+        # Force the config location. Emacs prefers
+        # ~/.emacs.d/ over the XDG path (~/.config/emacs/)
+        # and emacs itself creates that directory
+        "--init-directory=${config.users.users."renman-ymd".home}/.config/emacs"
       ];
       # Passing the ghostyy terminfo here make the daemon aware of xterm-ghostty
       EnvironmentVariables = {

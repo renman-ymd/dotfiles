@@ -614,7 +614,16 @@
   :mode ("\\.st\\'"
          "\\.class\\.st\\'"
          "\\.extension\\.st\\'"
-         "\\package\\.st\\'"))
+         "\\.package\\.st\\'"))
+
+(defun my/smalltalk-mode-setup ()
+  "Apply Pharo formatting conventions for Smalltalk code."
+  (setq-local indent-tabs-mode t)
+  (setq-local tab-width 3)
+  (setq-local smalltalk-indent-amount 3)
+  (when (bound-and-true-p ws-butler-mode)
+    (ws-butler-mode -1)))
+(add-hook 'smalltalk-mode-hook #'my/smalltalk-mode-setup)
 
 ;; ── Web (HTML/JSX/TSX/Astro auto-close & rename tags) ────────────────
 ;; web-mode handles auto-close and auto-rename of tags.
@@ -880,8 +889,9 @@
   :config (global-wakatime-mode 1))
 
 ;; ── Elcord — Discord Rich Presence ───────────────────────────────────
-;; Only active when you have project buffers open. Disconnects from
-;; Discord when no project buffers are visible in any window.
+;; Active whenever any emacs window (in any frame) is showing a buffer
+;; whose major mode derives from prog-mode (i.e., code files).
+;; Disconnect from Discord as soon as no code buffer is visible.
 (use-package elcord
   :commands (elcord-mode)
   :config
@@ -890,31 +900,30 @@
         elcord-editor-icon "emacs_icon"
         elcord-idle-message "Idle in Emacs...")
 
-  (defun my/buffer-in-project-p (&optional buf)
-    "Return non-nil if BUF (or current buffer) belongs to a project."
-    (with-current-buffer (or buf (current-buffer))
-      (and (buffer-file-name)
-           (ignore-errors (project-current nil)))))
-
-  (defun my/any-project-buffer-visible-p ()
-    "Return non-nil if any window in any frame shows a project buffer."
-    (cl-some (lambda (frame)
-               (cl-some (lambda (win)
-                          (my/buffer-in-project-p (window-buffer win)))
-                        (window-list frame)))
-             (frame-list)))
+  (defun my/elcord-coding-visible-p ()
+    "Return non-nil if any window in any currently shows a prog-mode buffer."
+    (cl-some
+     (lambda (frame)
+       (cl-some
+        (lambda (win)
+          (with-current-buffer (window-buffer win)
+            (derived-mode-p 'prog-mode)))
+        (window-list frame)))
+     (frame-list)))
 
   (defun my/elcord-auto-toggle ()
-    "Enable elcord when project buffers are visible, disable otherwise."
-    (if (my/any-project-buffer-visible-p)
+    "Enable elcord when a code buffers is visible, disable otherwise."
+    (if (my/elcord-coding-visible-p)
         (unless elcord-mode (elcord-mode 1))
       (when elcord-mode (elcord-mode -1))))
 
-  ;; Check after switching buffers in any window.
-  ;; window-buffer-change-functions only fires when the buffer shown
-  ;; in a window changes — much less frequent than buffer-list-update-hook.
-  (add-hook 'window-buffer-change-functions
-            (lambda (_frame) (my/elcord-auto-toggle))))
+  ;; Poll every 5 seconds to check if we should toggle elcord mode.
+  (defvar my/elcord-timer nil
+    "Timer object for periodically checking if Elcord should be toggled.")
+  (when my/elcord-timer
+    (cancel-timer my/elcord-timer))
+  (setq my/elcord-timer
+        (run-with-timer 5 5 #'my/elcord-auto-toggle )))
 
 ;; ── PDF viewing (GUI mode) ───────────────────────────────────────────
 (use-package pdf-tools

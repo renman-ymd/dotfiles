@@ -720,7 +720,7 @@
          ("C-<tab>" . copilot-accept-completion-by-word)))
 
 ;; ── request.el — HTTP library (dependency of copilot-chat) ───────────
-(use-package request)
+;; (use-package request)
 
 ;; ── copilot-chat.el — GitHub Copilot chat interface ──────────────────
 ;; Provides code-specific commands: explain, review, fix, optimize, test.

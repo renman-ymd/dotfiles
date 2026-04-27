@@ -336,6 +336,8 @@
       navigate = true;
       dark = true;
       side-by-side = true;
+      tabs = 2;
+      syntax-theme = "Catppuccin Macchiato";
     };
   };
 

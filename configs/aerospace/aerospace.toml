@@ -1,0 +1,151 @@
+config-version = 2
+start-at-login = true
+
+after-startup-command = ['exec-and-forget sketchybar']
+# Notify SketchyBar about workspace changes
+exec-on-workspace-change = [
+    '/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+
+# Tree normalizations
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Default layout for new/empty containers
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'
+
+# Lazy "mouse follows focused monitor"
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Neutralize accidental cmd-h "Hide application"
+automatically-unhide-macos-hidden-apps = true
+
+# Visual padding for accordion (4-term workspace mainly)
+accordion-padding = 30
+
+# Workspaces persist even when empty (so SketchyBar always shows all 10)
+persistent-workspaces = [
+    "1-main",  "2-web",   "3-code",  "4-term",   "5-chat",
+    "6-media", "7-notes", "8-misc",  "9-misc",   "10-misc",
+]
+
+[key-mapping]
+preset = 'qwerty'
+
+# Gaps. outer.top = 10 leaves breathing room under the menu bar/SketchyBar
+# on the notched MacBook Air display.
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left       = 8
+outer.bottom     = 8
+outer.top        = 10
+outer.right      = 8
+
+
+# Small / popup-style apps that shouldn't be tiled.
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.systempreferences'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.Notes'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.calculator'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'org.p0deje.Maccy'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.floatytool.floaty-lite'
+    run = 'layout floating'
+
+# Zen browser lands in 2-web by default and tiles there.
+[[on-window-detected]]
+    if.app-id = 'app.zen-browser.zen'
+    run = 'move-node-to-workspace 2-web'
+
+# Ghostty windows go to 4-term.
+[[on-window-detected]]
+    if.app-id = 'com.mitchellh.ghostty'
+    run = 'move-node-to-workspace 4-term'
+
+# ═══════════════════════ MAIN MODE ═══════════════════════
+[mode.main.binding]
+
+# ───── Layout ─────
+cmd-alt-comma = 'layout tiles accordion'         # toggle tiles ↔ accordion
+cmd-alt-slash = 'layout horizontal vertical'     # toggle split orientation
+cmd-alt-space = 'layout floating tiling'         # toggle float ↔ tile
+
+# ───── Focus (arrow keys) ─────
+cmd-alt-left  = 'focus left'
+cmd-alt-down  = 'focus down'
+cmd-alt-up    = 'focus up'
+cmd-alt-right = 'focus right'
+
+# ───── Move window (arrow keys + shift) ─────
+cmd-alt-shift-left  = 'move left'
+cmd-alt-shift-down  = 'move down'
+cmd-alt-shift-up    = 'move up'
+cmd-alt-shift-right = 'move right'
+
+# ───── Resize ─────
+cmd-alt-minus = 'resize smart -50'
+cmd-alt-equal = 'resize smart +50'
+
+# ───── Cycle windows in current workspace ─────
+ctrl-tab = 'focus right --boundaries-action wrap-around-the-workspace'
+ctrl-shift-tab = 'focus left --boundaries-action wrap-around-the-workspace'
+cmd-alt-tab = 'workspace-back-and-forth'
+
+# ───── Workspace switch ─────
+cmd-alt-1 = 'workspace 1-main'
+cmd-alt-2 = 'workspace 2-web'
+cmd-alt-3 = 'workspace 3-code'
+cmd-alt-4 = 'workspace 4-term'
+cmd-alt-5 = 'workspace 5-chat'
+cmd-alt-6 = 'workspace 6-media'
+cmd-alt-7 = 'workspace 7-notes'
+cmd-alt-8 = 'workspace 8-misc'
+cmd-alt-9 = 'workspace 9-misc'
+cmd-alt-0 = 'workspace 10-misc'
+
+# ───── Move focused window to workspace ─────
+cmd-alt-shift-1 = 'move-node-to-workspace 1-main'
+cmd-alt-shift-2 = 'move-node-to-workspace 2-web'
+cmd-alt-shift-3 = 'move-node-to-workspace 3-code'
+cmd-alt-shift-4 = 'move-node-to-workspace 4-term'
+cmd-alt-shift-5 = 'move-node-to-workspace 5-chat'
+cmd-alt-shift-6 = 'move-node-to-workspace 6-media'
+cmd-alt-shift-7 = 'move-node-to-workspace 7-notes'
+cmd-alt-shift-8 = 'move-node-to-workspace 8-misc'
+cmd-alt-shift-9 = 'move-node-to-workspace 9-misc'
+cmd-alt-shift-0 = 'move-node-to-workspace 10-misc'
+
+# ───── Reload config quickly without entering service mode ─────
+cmd-alt-shift-c = 'reload-config'
+
+# ───── Service mode (rarely-used actions) ─────
+cmd-alt-shift-semicolon = 'mode service'
+
+# ═══════════════════════ SERVICE MODE ═══════════════════════
+# Esc to return to main mode.
+[mode.service.binding]
+esc       = ['reload-config', 'mode main']
+r         = ['flatten-workspace-tree', 'mode main']            # reset layout
+f         = ['layout floating tiling', 'mode main']            # toggle float
+backspace = ['close-all-windows-but-current', 'mode main']     # close peers
+
+# Join with a direction (rebuild the tree manually)
+cmd-alt-shift-left  = ['join-with left',  'mode main']
+cmd-alt-shift-down  = ['join-with down',  'mode main']
+cmd-alt-shift-up    = ['join-with up',    'mode main']
+cmd-alt-shift-right = ['join-with right', 'mode main']

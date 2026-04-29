@@ -476,7 +476,15 @@
       aliases = {
         logs = [ "log" "-r::all()" ];
         track = [ "bookmark" "track" ];
+        # Using zsh over nu as the one-liner need command line args
+        # which nu do not allow in one-liner, only in script
+        branch = [ "util" "exec" "--" "zsh" "-c" ''
+          jj bookmark create "$1";
+          jj bookmark track "$1";
+        '' "jj branch-create" ];
+        fetch = [ "git" "fetch" ];
         tug = [ "bookmark" "move" "--from" "heads(::@- & bookmarks())" "--to" "@-" ];
+        push = [ "util" "exec" "--" "nu" "-c" "jj tug; jj git push"];
         difft = [ "diff" "--tool" "difft" ];
         diff-in = [ "diff" "--tool" "difft-inline" ];
       };

@@ -24,7 +24,6 @@
     };
     casks = [
       "deezer"
-      "hammerspoon"
       "utm"
       "nvidia-geforce-now"
     ];
@@ -34,23 +33,8 @@
       "ols"
     ];
     masApps = {
-      "Whuthering Waves" = 6475033368;
-    };
-  };
-
-  system.defaults.CustomUserPreferences = {
-    "org.hammerspoon.Hammerspoon" = {
-      MJConfigFile = "~/.config/nix-darwin/hammerspoon/init.lua";
-    };
-  };
-
-  launchd.user.agents.hammerspoon = {
-    serviceConfig = {
-      Label = "org.hammerspoon.Hammerspoon";
-      ProgramArguments = [ "/Applications/Hammerspoon.app/Contents/MacOS/Hammerspoon" ];
-      RunAtLoad = true;
-      # "Aqua" means: only start in graphical dekstop session
-      LimitLoadToSessionType = "Aqua";
+      "Wuthering Waves" = 6475033368;
+      "Floaty" = 6755633285;
     };
   };
 
@@ -71,6 +55,7 @@
         PATH = "${config.users.users."renman-ymd".home}/.nix-profile/bin:/etc/profiles/per-user/renman-ymd/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin";
       };
       RunAtLoad = true;
+      # "Aqua" means: only start in graphical dekstop session
       LimitLoadToSessionType = "Aqua";
       # redirect output into a Log folder
       StandardOutPath = "/tmp/emacs-daemon.stdout.log";

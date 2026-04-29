@@ -60,7 +60,8 @@
     # --- Miscellaneous ---
     vesktop
     starship-jj
-    alt-tab-macos # This drives me crazy
+    alt-tab-macos
+    maccy
     pinentry_mac
     glibtool
   ];

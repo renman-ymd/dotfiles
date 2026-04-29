@@ -26,6 +26,7 @@
       "deezer"
       "utm"
       "nvidia-geforce-now"
+      "steam"
     ];
     brews = [
       "odin"

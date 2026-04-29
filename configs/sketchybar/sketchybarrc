@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# SketchyBar — minimal config focused on AeroSpace workspace indicator.
+# Invoked by AeroSpace's `after-startup-command`.
+#
+# Plugins live alongside this file at $CONFIG_DIR/plugins/
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+# ───── Bar appearance ─────
+# Catppuccin Macchiato palette.
+sketchybar --bar \
+    height=28 \
+    blur_radius=20 \
+    position=top \
+    sticky=on \
+    padding_left=8 \
+    padding_right=8 \
+    color=0xff24273a \
+    border_color=0xff494d64 \
+    border_width=0
+
+# ───── Default styling for all items ─────
+sketchybar --default \
+    icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
+    icon.color=0xffcad3f5 \
+    label.font="JetBrainsMono Nerd Font:Semibold:13.0" \
+    label.color=0xffcad3f5 \
+    background.corner_radius=5 \
+    background.height=22 \
+    padding_left=4 \
+    padding_right=4 \
+    label.padding_left=4 \
+    label.padding_right=4
+
+# ───── AeroSpace workspace indicators ─────
+# Custom event triggered by AeroSpace via exec-on-workspace-change.
+sketchybar --add event aerospace_workspace_change
+
+# One item per persistent workspace, in order matching the aerospace.toml.
+WORKSPACES=(
+    "1-main"  "2-web"   "3-code"  "4-term"   "5-chat"
+    "6-media" "7-notes" "8-misc"  "9-misc"   "10-misc"
+)
+
+for ws in "${WORKSPACES[@]}"; do
+    sketchybar --add item "space.$ws" left \
+        --subscribe "space.$ws" aerospace_workspace_change \
+        --set "space.$ws" \
+            label="$ws" \
+            click_script="aerospace workspace $ws" \
+            background.color=0xff363a4f \
+            background.drawing=off \
+            script="$PLUGIN_DIR/aerospace.sh $ws"
+done
+
+# ───── Right side — clock ─────
+# Useful since auto-hiding the macOS menu bar would hide the system clock.
+sketchybar --add item clock right \
+    --set clock \
+        update_freq=10 \
+        script="date '+%H:%M'" \
+        label.color=0xffb7bdf8
+
+# ───── Initial render ─────
+# Force a workspace_change event so the focused workspace highlights immediately
+# instead of waiting for the user's first switch.
+sketchybar --update
+
+FOCUSED=$(aerospace list-workspaces --focused)
+sketchybar --trigger aerospace_workspace_change "FOCUSED_WORKSPACE=$FOCUSED"

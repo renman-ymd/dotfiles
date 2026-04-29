@@ -57,6 +57,10 @@
     poppler
     wakatime-cli # Private key to write to ~/.wakatime.cfg
 
+    # --- Window manager ---
+    aerospace
+    sketchybar
+
     # --- Miscellaneous ---
     vesktop
     starship-jj
@@ -183,6 +187,15 @@
     "emacs/init.el".source = ../configs/emacs/init.el;
     "emacs-light/early-init.el".source = ../configs/emacs-light/early-init.el;
     "emacs-light/init.el".source = ../configs/emacs-light/init.el;
+    "aerospace/aerospace.toml".source = ../configs/aerospace/aerospace.toml;
+    "sketchybar/sketchybarrc" = {
+      source = ../configs/sketchybar/sketchybarrc;
+      executable = true;
+    };
+    "sketchybar/plugins/aerospace.sh" = {
+      source = ../configs/sketchybar/plugins/aerospace.sh;
+      executable = true;
+    };
   };
 
   programs.zoxide = {
@@ -280,6 +293,11 @@
 
       def em-restart [] {
           ^launchctl kickstart -k $"gui/(^id -u | str trim)/org.gnu.emacs.daemon"
+      }
+
+      def sb-restart [] {
+          ^pkill sketchybar
+          ^sketchybar out+err> /dev/null &
       }
 
       $env.config.keybindings ++= [{

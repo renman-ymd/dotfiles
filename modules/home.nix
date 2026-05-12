@@ -196,6 +196,10 @@
       source = ../configs/sketchybar/plugins/aerospace.sh;
       executable = true;
     };
+    "jj/scripts/pr-create.nu" = {
+      source = ../configs/jj/scripts/pr-create.nu;
+      executable = true;
+    };
   };
 
   programs.zoxide = {
@@ -500,6 +504,7 @@
           jj bookmark create "$1";
           jj bookmark track "$1";
         '' "jj branch-create" ];
+        pr-create = ["util" "exec" "--" "nu" "~/.config/jj/scripts/pr-create.nu"];
         fetch = [ "git" "fetch" ];
         tug = [ "bookmark" "move" "--from" "heads(::@- & bookmarks())" "--to" "@-" ];
         push = [ "util" "exec" "--" "nu" "-c" "jj tug; jj git push"];

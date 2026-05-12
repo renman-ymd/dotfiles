@@ -27,6 +27,7 @@
       "utm"
       "nvidia-geforce-now"
       "steam"
+      "claude"
     ];
     brews = [
       "odin"

@@ -457,12 +457,12 @@
       signing = {
         backend = "gpg";
         key = "CB49EE78601E1E1B";
-        behavior = "own";
+        behavior = "force";
       };
 
       ui = {
         editor = "emacs -nw --init-dir ~/.config/emacs-light";
-        default-command = "log";
+        default-command = [ "log" "-n" "10" ];
         graph.style = "square";
         pager = "delta";
         conflict-marker-style = "git";
@@ -498,7 +498,7 @@
       };
 
       aliases = {
-        logs = [ "log" "-r::all()" ];
+        logs = [ "log" "-r::all()" "--no-pager" ];
         track = [ "bookmark" "track" ];
         # Using zsh over nu as the one-liner need command line args
         # which nu do not allow in one-liner, only in script

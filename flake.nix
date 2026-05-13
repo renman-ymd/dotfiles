@@ -21,6 +21,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hunk = {
+      url = "github:modem-dev/hunk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -32,7 +37,15 @@
     };
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, nixpkgs-for-lix, home-manager, zen-browser, nur, nix-index-database }: {
+  outputs = inputs@{ self,
+                     nix-darwin,
+                     nixpkgs,
+                     nixpkgs-for-lix,
+                     home-manager,
+                     zen-browser,
+                     hunk,
+                     nur,
+                     nix-index-database }: {
     darwinConfigurations."Renauds-MacBook-Air" = nix-darwin.lib.darwinSystem {
       specialArgs = {
         lixpkg = nixpkgs-for-lix.legacyPackages."aarch64-darwin".lix;
@@ -47,7 +60,10 @@
           nixpkgs.config.allowUnfree = true;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.sharedModules = [ zen-browser.homeModules.default ];
+          home-manager.sharedModules = [
+            zen-browser.homeModules.default
+            hunk.homeManagerModules.default
+          ];
           home-manager.users."renman-ymd" = import ./modules/home.nix;
         }
       ];

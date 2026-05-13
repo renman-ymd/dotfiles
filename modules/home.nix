@@ -366,6 +366,18 @@
     };
   };
 
+  programs.hunk = {
+    enable = true;
+    settings = {
+      theme = "paper";
+      mode = "split";
+      sidebar = true;
+      line_numbers = true;
+      agent_notes = true;
+      hunk_metadata = false;
+    };
+  };
+
   programs.git = {
     enable = true;
 
@@ -512,6 +524,7 @@
         push = [ "util" "exec" "--" "nu" "-c" "jj tug; jj git push"];
         difft = [ "diff" "--tool" "difft" ];
         diff-in = [ "diff" "--tool" "difft-inline" ];
+        hpager = [ "--config" "ui.pager=hunk pager" ];
       };
 
       revsets = {

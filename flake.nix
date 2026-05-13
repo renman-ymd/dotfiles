@@ -44,6 +44,7 @@
         home-manager.darwinModules.home-manager
         {
           nixpkgs.overlays = [ nur.overlays.default ];
+          nixpkgs.config.allowUnfree = true;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.sharedModules = [ zen-browser.homeModules.default ];

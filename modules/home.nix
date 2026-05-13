@@ -63,6 +63,8 @@
 
     # --- Miscellaneous ---
     vesktop
+    discord
+    discordo
     starship-jj
     alt-tab-macos
     maccy

@@ -9,12 +9,13 @@ exec-on-workspace-change = [
 ]
 
 # Tree normalizations
-enable-normalization-flatten-containers = true
-enable-normalization-opposite-orientation-for-nested-containers = true
+# Off: full manual tree control. Sub-containers persist (no auto-flatten)
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
 
 # Default layout for new/empty containers
 default-root-container-layout = 'tiles'
-default-root-container-orientation = 'auto'
+default-root-container-orientation = 'horizontal'
 
 # Lazy "mouse follows focused monitor"
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
@@ -97,6 +98,12 @@ cmd-alt-shift-down  = 'move down'
 cmd-alt-shift-up    = 'move up'
 cmd-alt-shift-right = 'move right'
 
+# ───── Join with (build nested containers) ─────
+cmd-alt-ctrl-left  = 'join-with left'
+cmd-alt-ctrl-down  = 'join-with down'
+cmd-alt-ctrl-up    = 'join-with up'
+cmd-alt-ctrl-right = 'join-with right'
+
 # ───── Resize ─────
 cmd-alt-minus = 'resize smart -50'
 cmd-alt-equal = 'resize smart +50'
@@ -119,16 +126,24 @@ cmd-alt-9 = 'workspace 9-misc'
 cmd-alt-0 = 'workspace 10-misc'
 
 # ───── Move focused window to workspace ─────
-cmd-alt-shift-1 = 'move-node-to-workspace 1-main'
-cmd-alt-shift-2 = 'move-node-to-workspace 2-web'
-cmd-alt-shift-3 = 'move-node-to-workspace 3-code'
-cmd-alt-shift-4 = 'move-node-to-workspace 4-term'
-cmd-alt-shift-5 = 'move-node-to-workspace 5-chat'
-cmd-alt-shift-6 = 'move-node-to-workspace 6-media'
-cmd-alt-shift-7 = 'move-node-to-workspace 7-notes'
-cmd-alt-shift-8 = 'move-node-to-workspace 8-misc'
-cmd-alt-shift-9 = 'move-node-to-workspace 9-misc'
-cmd-alt-shift-0 = 'move-node-to-workspace 10-misc'
+cmd-alt-shift-1 = 'move-node-to-workspace --focus-follows-window 1-main'
+cmd-alt-shift-2 = 'move-node-to-workspace --focus-follows-window 2-web'
+cmd-alt-shift-3 = 'move-node-to-workspace --focus-follows-window 3-code'
+cmd-alt-shift-4 = 'move-node-to-workspace --focus-follows-window 4-term'
+cmd-alt-shift-5 = 'move-node-to-workspace --focus-follows-window 5-chat'
+cmd-alt-shift-6 = 'move-node-to-workspace --focus-follows-window 6-media'
+cmd-alt-shift-7 = 'move-node-to-workspace --focus-follows-window 7-notes'
+cmd-alt-shift-8 = 'move-node-to-workspace --focus-follows-window 8-misc'
+cmd-alt-shift-9 = 'move-node-to-workspace --focus-follows-window 9-misc'
+cmd-alt-shift-0 = 'move-node-to-workspace --focus-follows-window 10-misc'
+
+# ───── Monitor focus ─────
+cmd-alt-rightSquareBracket = 'focus-monitor next'
+cmd-alt-leftSquareBracket  = 'focus-monitor prev'
+
+# ───── Move window to monitor ─────
+cmd-alt-shift-rightSquareBracket = 'move-node-to-monitor --focus-follows-window next'
+cmd-alt-shift-leftSquareBracket  = 'move-node-to-monitor --focus-follows-window prev'
 
 # ───── Reload config quickly without entering service mode ─────
 cmd-alt-shift-c = 'reload-config'

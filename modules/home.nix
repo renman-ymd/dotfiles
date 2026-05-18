@@ -453,6 +453,7 @@
       ".env.local"
       "*.orig"
       "*.rej"
+      ".claude/*"
     ];
   };
 

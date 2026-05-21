@@ -562,15 +562,15 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks."*" = {
-      extraOptions = {
+    settings = {
+      "*" = {
         AddKeysToAgent = "yes";
         UseKeychain = "yes";
       };
-    };
-    matchBlocks."github.com" = {
-      user = "git";
-      identityFile = "~/.ssh/id_ed25519";
+      "github.com" = {
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519";
+      };
     };
   };
 

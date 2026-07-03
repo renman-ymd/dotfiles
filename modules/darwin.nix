@@ -46,7 +46,13 @@
     serviceConfig = {
       Label = "org.gnu.emacs.daemon";
       ProgramArguments = [
-        "${pkgs.emacs-macport}/bin/emacs"
+        # Stable re-signed copy of ${pkgs.emacs-macport}/bin/emacs, maintained
+        # by home.activation.emacsDaemonBinary (home.nix). macOS TCC pins
+        # permission grants to the executable's code-signing identity, and the
+        # ad-hoc-signed store binary changes identity on every update.
+        # Side effect of the static path: darwin-rebuild no longer restarts
+        # the daemon on emacs bumps; run em-restart to pick up a new version.
+        "${config.users.users."renman-ymd".home}/.local/libexec/nix-resigned/emacs"
         "--fg-daemon=main"
         # Force the config location. Emacs prefers
         # ~/.emacs.d/ over the XDG path (~/.config/emacs/)

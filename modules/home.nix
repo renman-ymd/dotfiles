@@ -338,6 +338,59 @@
     ${pkgs.jujutsu}/bin/jj util completion nushell > "$HOME/.config/nushell/completions/jj.nu"
   '';
 
+  # macOS TCC pins permissions (screen recording, accessibility, mic...) to an
+  # app's code-signing identity. Nix-built apps are ad-hoc signed, so their
+  # identity is the hash of the exact binary and every update silently revokes
+  # the grants. Re-sign them with the stable self-signed "nix-selfsign"
+  # certificate (login keychain) so grants survive rebuilds. Dev-ID-signed
+  # apps (AltTab, Maccy) are left untouched.
+  home.activation.resignAdhocApps = lib.hm.dag.entryAfter [ "copyApps" ] ''
+    if /usr/bin/security find-certificate -c nix-selfsign > /dev/null 2>&1; then
+      for app in "$HOME/Applications/Home Manager Apps"/*.app; do
+        [ -e "$app" ] || continue
+        # Sign anything without a certificate chain (ad-hoc, unsigned, or
+        # unreadable signature); leave Developer-ID apps and previously
+        # re-signed ones alone. Authority lines only appear at --verbose=2.
+        if ! /usr/bin/codesign -dv --verbose=2 "$app" 2>&1 | /usr/bin/grep -q "^Authority="; then
+          run /usr/bin/codesign --force --deep --preserve-metadata=entitlements \
+            --sign nix-selfsign "$app" \
+            || warnEcho "resignAdhocApps: failed to re-sign $app"
+        fi
+      done
+    else
+      warnEcho "resignAdhocApps: nix-selfsign certificate not found in keychain, skipping"
+    fi
+  '';
+
+  # The emacs daemon (launchd agent in darwin.nix) must run a binary with a
+  # stable code-signing identity or TCC grants die on every emacs update.
+  # Store binaries are read-only and can't be re-signed in place, so keep a
+  # nix-selfsign-signed copy at a fixed path. The .src marker skips the work
+  # when the store binary is unchanged; the mv keeps the swap atomic so a
+  # running daemon is never invalidated mid-flight.
+  home.activation.emacsDaemonBinary = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    daemonBin="$HOME/.local/libexec/nix-resigned/emacs"
+    srcBin="${pkgs.emacs-macport}/bin/emacs"
+    # native-comp: emacs resolves its preloaded .eln files relative to the
+    # executable (execdir/../native-lisp), so the copied binary needs this
+    # sibling symlink to the package's versioned native-lisp directory.
+    run mkdir -p "$(dirname "$daemonBin")"
+    run /bin/ln -sfn "${pkgs.emacs-macport}"/lib/emacs/*/native-lisp \
+      "$HOME/.local/libexec/native-lisp"
+    if [ "$(cat "$daemonBin.src" 2>/dev/null)" != "$srcBin" ]; then
+      run cp -f "$srcBin" "$daemonBin.tmp"
+      run chmod u+w "$daemonBin.tmp"
+      if run /usr/bin/codesign --force --preserve-metadata=entitlements \
+           --sign nix-selfsign "$daemonBin.tmp"; then
+        run mv -f "$daemonBin.tmp" "$daemonBin"
+        run sh -c "echo '$srcBin' > '$daemonBin.src'"
+      else
+        warnEcho "emacsDaemonBinary: signing failed, daemon binary not updated"
+        rm -f "$daemonBin.tmp"
+      fi
+    fi
+  '';
+
   # Configs are symlinked via xdg.configFile
   # daemon is managed via launchd in darwin.nix
   programs.emacs = {

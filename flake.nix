@@ -60,6 +60,7 @@
           nixpkgs.config.allowUnfree = true;
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.backupFileExtension = "backup-nix-home-manager";
           home-manager.sharedModules = [
             zen-browser.homeModules.default
             hunk.homeManagerModules.default

@@ -1,13 +1,6 @@
 config-version = 2
 start-at-login = true
 
-after-startup-command = ['exec-and-forget sketchybar']
-# Notify SketchyBar about workspace changes
-exec-on-workspace-change = [
-    '/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
-]
-
 # Tree normalizations
 # Off: full manual tree control. Sub-containers persist (no auto-flatten)
 enable-normalization-flatten-containers = false
@@ -26,7 +19,7 @@ automatically-unhide-macos-hidden-apps = true
 # Visual padding for accordion (4-term workspace mainly)
 accordion-padding = 30
 
-# Workspaces persist even when empty (so SketchyBar always shows all 10)
+# Workspaces persist even when empty
 persistent-workspaces = [
     "1-main",  "2-web",   "3-code",  "4-term",   "5-chat",
     "6-media", "7-notes", "8-misc",  "9-misc",   "10-misc",
@@ -35,7 +28,7 @@ persistent-workspaces = [
 [key-mapping]
 preset = 'qwerty'
 
-# Gaps. outer.top = 10 leaves breathing room under the menu bar/SketchyBar
+# Gaps. outer.top leaves breathing room under the menu bar
 # on the notched MacBook Air display.
 [gaps]
 inner.horizontal = 2

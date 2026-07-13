@@ -21,9 +21,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Single-system list: restrict bun2nix (transitive input of hunk) to
+    # aarch64-darwin only. Otherwise its flake-parts/treefmt perSystem
+    # evaluates x86_64-darwin, which nixpkgs 26.11 no longer supports.
+    nix-systems-darwin.url = "github:nix-systems/aarch64-darwin";
+
     hunk = {
       url = "github:modem-dev/hunk";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.bun2nix.inputs.systems.follows = "nix-systems-darwin";
     };
 
     nur = {
@@ -45,7 +51,8 @@
                      zen-browser,
                      hunk,
                      nur,
-                     nix-index-database }: {
+                     nix-index-database,
+                     nix-systems-darwin }: {
     darwinConfigurations."Renauds-MacBook-Air" = nix-darwin.lib.darwinSystem {
       specialArgs = {
         lixpkg = nixpkgs-for-lix.legacyPackages."aarch64-darwin".lix;

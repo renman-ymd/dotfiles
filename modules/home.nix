@@ -336,6 +336,17 @@
     if /usr/bin/security find-certificate -c nix-selfsign > /dev/null 2>&1; then
       for app in "$HOME/Applications/Home Manager Apps"/*.app; do
         [ -e "$app" ] || continue
+        # An embedded provisioning profile grants restricted entitlements
+        # (Zen: passkeys, keychain groups) that only validate against the
+        # vendor's own Developer ID. Re-signing carries the entitlements over
+        # but voids the profile, so AMFI refuses the app ("No matching profile
+        # found", -413) and launchd fails the spawn with POSIX errno 163.
+        # Such apps are vendor-signed anyway, which is already a stable TCC
+        # identity, so leave them alone.
+        if [ -e "$app/Contents/embedded.provisionprofile" ]; then
+          verboseEcho "resignAdhocApps: skipping $app (ships a provisioning profile)"
+          continue
+        fi
         # Sign anything without a certificate chain (ad-hoc, unsigned, or
         # unreadable signature); leave Developer-ID apps and previously
         # re-signed ones alone. Authority lines only appear at --verbose=2.

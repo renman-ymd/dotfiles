@@ -83,19 +83,12 @@
     };
   };
 
-  launchd.user.agents.gpg-agent = {
-    serviceConfig = {
-      Label = "org.gnupg.gpg-agent";
-      ProgramArguments = [
-        "${pkgs.gnupg}/bin/gpg-agent"
-        "--supervised"
-      ];
-      RunAtLoad = true;
-      KeepAlive = { SuccessfulExit = false; };
-      StandardOutPath = "/tmp/gpg-agent.stdout.log";
-      StandardErrorPath = "/tmp/gpg-agent.stderr.log";
-    };
-  };
+  # No launchd agent for gpg-agent on purpose. "--supervised" speaks the
+  # systemd socket-activation protocol (LISTEN_FDS/LISTEN_FDNAMES), which
+  # launchd does not provide, so the unit died at startup on every launch
+  # and KeepAlive respawned it forever. gpg starts the agent on demand
+  # (standard behaviour since GnuPG 2.1) and creates the sockets itself,
+  # which is what has actually been serving signing all along.
 
   # Fonts – must be declared here on aarch63-darwin
   # (because of a HM systemd Linux-only dependency)

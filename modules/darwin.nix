@@ -48,6 +48,7 @@
     masApps = {
       "Wuthering Waves" = 6475033368;
       "Floaty" = 6755633285;
+      "Keynotes" = 361285480;
     };
   };
 

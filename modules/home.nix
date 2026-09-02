@@ -503,6 +503,7 @@
       # --- Nix ---
       "result"
       "result-*"
+      ".direnv"
 
       # --- General ---
       "*.log"

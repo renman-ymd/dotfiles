@@ -61,15 +61,19 @@ outer.right      = 4
     if.app-id = 'com.floatytool.floaty-lite'
     run = 'layout floating'
 
-# Zen browser lands in 2-web by default and tiles there.
 [[on-window-detected]]
-    if.app-id = 'app.zen-browser.zen'
-    run = 'move-node-to-workspace 2-web'
+    if.app-id = 'com.apple.Finder'
+    run = 'layout floating'
 
-# Ghostty windows go to 4-term.
+# Ghostty fix for native tabs managment
 [[on-window-detected]]
-    if.app-id = 'com.mitchellh.ghostty'
-    run = 'move-node-to-workspace 4-term'
+    if.app-id='com.mitchellh.ghostty'
+    run = 'layout tiling'
+
+# Same issue for preview native tabs
+[[on-window-detected]]
+    if.app-id='com.apple.Preview'
+    run = 'layout floating'
 
 # ═══════════════════════ MAIN MODE ═══════════════════════
 [mode.main.binding]

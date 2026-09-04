@@ -7,6 +7,15 @@
     "/opt/homebrew/sbin"
   ];
 
+  # Nushell is the only interactive shell. zsh stays as the POSIX login shell
+  # (darwin.nix) but must stay bare, so no program may inject prompts,
+  # completions or hooks into it -- opt every shell out by default and let
+  # nushell back in.
+  home.shell = {
+    enableShellIntegration = false;
+    enableNushellIntegration = true;
+  };
+
   home.packages = with pkgs; [
     # --- Language runtimes ---
     go
@@ -86,7 +95,6 @@
 
   programs.direnv = {
     enable = true;
-    enableZshIntegration = true;
     nix-direnv.enable = true;   # faster nix-shell
   };
 
@@ -96,91 +104,24 @@
     enableNushellIntegration = true;
   };
 
-  # login shell with oh-my-zsh
+  # Login shell only -- interactive work happens in nushell (ghostty spawns
+  # it directly). Keep this to the environment that login/non-nushell
+  # consumers still need; no prompt, aliases, completions or plugins.
   programs.zsh = {
     enable = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-
-    shellAliases = {
-      ls = "eza --icons --git";
-      tree = "eza --tree --icons --git";
-      cat = "bat --style=auto";
-      em = "emacsclient -s main -nw";
-      emg = "emacsclient -s main -c";
-      eml = "emacs -nw --init-dir ~/.config/emacs-light";
-      em-kill = "emacsclient -s main --eval '(kill-emacs)'";
-      em-restart = ''launchctl kickstart -k "gui/$(id -u)/org.gnu.emacs.daemon"'';
-    };
-
-    # initExtraBeforeCompInit = ''
-    #   fpath=(${pkgs.zsh-completions}/share/zsh/site-functions $fpath)
-    # '';
-
-    plugins = [
-      {
-        name = "you-should-use";
-        src = pkgs.zsh-you-should-use;
-        file = "share/zsh/plugins/you-should-use/you-should-use.plugin.zsh";
-      }
-    ];
-
-    oh-my-zsh = {
-      enable = true;
-      plugins = [
-        "docker"
-        "rust"
-        "golang"
-        "python"
-        "bun"
-        "history"
-        "copypath"
-        "copyfile"
-        "web-search"
-        "extract"
-        "sudo"
-      ];
-    };
+    enableCompletion = false;   # nothing here to complete
 
     initContent = ''
-      if [[ -n $SSH_CONNECTION ]]; then
-        export EDITOR='nano'
-        export VISUAL='nano'
-      else
-        if emacsclient -s main -e t &>/dev/null 2>&1; then
-          export EDITOR='emacsclient -s main -nw'
-        else
-          export EDITOR='emacs -nw --init-dir ~/.config/emacs-light'
-        fi
-        export VISUAL='emacsclient -s main -c'
-      fi
+      export EDITOR='emacs -nw -Q'
+      export VISUAL='emacs -nw -Q'
 
       export BROWSER='zen-beta'
-
-      export LESS="-RFMiS --incsearch --use-color -j.5"
-      export DELTA_PAGER="less -RFEX --mouse --wheel-lines=3"
-
-      export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-      export MANROFFOPT="-c"
-
-      # lazy-load autocompletion for jj (~50ms) rather than on every shell start
-      jj() {
-        if [ -z "$JJ_LOADED" ]; then
-          source <(COMPLETE=zsh command jj)
-          JJ_LOADED=true
-        fi
-        command jj "$@"
-      }
-
-      # Show directory content after every cd
-      chpwd() { pwd; eza --icons --all }
     '';
   };
 
-  # replaces oh-my-zsh theme, works in both zsh and Nu
+  # nushell prompt
   programs.starship = {
     enable = true;
-    enableZshIntegration = true;
     enableNushellIntegration = true;
   };
 
@@ -204,7 +145,6 @@
 
   programs.zoxide = {
     enable = true;
-    enableZshIntegration = true;
     enableNushellIntegration = true;
     options = [ "--cmd" "cd" ];
   };

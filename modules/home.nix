@@ -50,6 +50,9 @@
     kotlin-language-server
     nil
 
+    # --- Dev environments ---
+    devenv
+
     # --- CLI utilities ---
     ripgrep
     fd

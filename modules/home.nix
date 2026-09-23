@@ -2,6 +2,11 @@
 
   home.stateVersion = "25.11";
 
+  home.sessionPath = [
+    "/opt/homebrew/bin"
+    "/opt/homebrew/sbin"
+  ];
+
   home.packages = with pkgs; [
     # --- Language runtimes ---
     go

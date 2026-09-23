@@ -22,12 +22,14 @@
       # "zap" removes any cask/formula not in this list on darwin-rebuild
       cleanup = "zap";
     };
+    taps = [ "Sikarugir-App/sikarugir" ];
     casks = [
       "deezer"
       "utm"
       "nvidia-geforce-now"
       "steam"
       "claude"
+      { name = "Sikarugir-App/sikarugir/sikarugir"; trusted = true; }
     ];
     brews = [
       "odin"

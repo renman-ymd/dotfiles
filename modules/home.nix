@@ -356,7 +356,6 @@
 
   programs.delta = {
     enable = true;
-    enableGitIntegration = true;
     options = {
       navigate = true;
       dark = true;
@@ -380,25 +379,6 @@
 
   programs.git = {
     enable = true;
-
-    lfs.enable = true;
-
-    signing = {
-      format = "openpgp";
-      key = "CB49EE78601E1E1B";
-      signByDefault = true;
-    };
-
-    settings = {
-      user.name = "Renaud Manet";
-      user.email = "renaud.manet@epitech.eu";
-
-      init.defaultBranch = "main";
-      pull.rebase = true;
-      merge.conflictStyle = "zdiff3";
-      core.editor = "emacs -nw --init-dir ~/.config/emacs-light";
-      github.user = "renman-ymd";
-    };
 
     ignores = [
       # --- macOS ---

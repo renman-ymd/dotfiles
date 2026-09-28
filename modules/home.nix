@@ -367,8 +367,9 @@
   programs.hunk = {
     enable = true;
     settings = {
-      theme = "paper";
-      mode = "split";
+      theme = "catppuccin-latte";
+      mode = "auto";
+      wrap_lines = true;
       sidebar = true;
       line_numbers = true;
       agent_notes = true;

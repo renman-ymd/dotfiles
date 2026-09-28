@@ -359,7 +359,6 @@
     options = {
       navigate = true;
       dark = true;
-      side-by-side = true;
       tabs = 2;
       syntax-theme = "Catppuccin Macchiato";
     };
@@ -458,7 +457,14 @@
         editor = "emacs -nw --init-dir ~/.config/emacs-light";
         default-command = [ "log" "-n" "10" ];
         graph.style = "square";
-        pager = "delta";
+        # jj pipes into the pager, so read the width from the terminal itself
+        pager = "${pkgs.writeShellScript "delta-auto-side-by-side" ''
+          cols=$(stty size 2> /dev/null < /dev/tty | cut -d ' ' -f 2)
+          if [ "''${cols:-0}" -ge 160 ]; then
+            exec delta --side-by-side "$@"
+          fi
+          exec delta "$@"
+        ''}";
         conflict-marker-style = "git";
         diff-formatter = ":git";
         show-cryptographic-signatures = true;
@@ -507,6 +513,8 @@
         difft = [ "diff" "--tool" "difft" ];
         diff-in = [ "diff" "--tool" "difft-inline" ];
         hpager = [ "--config" "ui.pager=hunk pager" ];
+        sbs = [ "--config" "ui.pager=delta --side-by-side" ];
+        unified = [ "--config" "ui.pager=delta" ];
       };
 
       revsets = {

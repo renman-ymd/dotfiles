@@ -1,0 +1,180 @@
+# AeroSpace, mirroring the Hyprland config.
+#
+# Hyprland's Super is Cmd+Alt here: Cmd alone belongs to macOS and its apps.
+# Shift and Ctrl keep their Linux roles. Bindings are physical key positions
+# (AeroSpace reads them as QWERTY positions), as on Linux.
+#
+# Needs workspace.nu in ~/.config/aerospace/ for everything about workspaces.
+# Two keys are left to other apps, so AeroSpace must not bind them:
+#   Cmd+Alt+P       Floaty Lite's "pin or unpin the active window" shortcut (set in Floaty)
+#   Cmd+Alt+Return  Ghostty's quick terminal (keybind in Ghostty's config)
+config-version = 2
+start-at-login = true
+
+# Normalizations on (AeroSpace's defaults): the tree you see is the tree you have.
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'horizontal'
+
+# Lazy "mouse follows focused monitor"
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
+# Neutralize accidental cmd-h "Hide application"
+automatically-unhide-macos-hidden-apps = true
+
+accordion-padding = 30
+
+# The nine fixed workspaces, as on Linux. Temporary ones (10, 11, ...) come and go.
+persistent-workspaces = [
+    "1-Claude", "2-web", "3-code", "4-term", "5-chat",
+    "6-media", "7-notes", "8-misc", "9-Gaming",
+]
+
+# exec-and-forget doesn't see your shell's PATH: point it at nix-darwin's and Homebrew's
+# bin directories so it finds `nu` and `aerospace`.
+[exec]
+inherit-env-vars = true
+
+[exec.env-vars]
+PATH = '/run/current-system/sw/bin:/etc/profiles/per-user/${USER}/bin:${HOME}/.nix-profile/bin:/opt/homebrew/bin:${PATH}'
+
+[key-mapping]
+preset = 'qwerty'
+
+# Your gaps. outer.top leaves room under the menu bar on the notched display.
+[gaps]
+inner.horizontal = 2
+inner.vertical   = 2
+outer.left       = 4
+outer.bottom     = 8
+outer.top        = 6
+outer.right      = 4
+
+
+# Small / popup-style apps that shouldn't be tiled (your Mac list, unchanged).
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.systempreferences'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.Notes'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.calculator'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'org.p0deje.Maccy'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.floatytool.floaty-lite'
+    run = 'layout floating'
+
+[[on-window-detected]]
+    if.app-id = 'com.apple.Finder'
+    run = 'layout floating'
+
+# Ghostty fix for native tabs management
+[[on-window-detected]]
+    if.app-id = 'com.mitchellh.ghostty'
+    run = 'layout tiling'
+
+# Same issue for Preview native tabs
+[[on-window-detected]]
+    if.app-id = 'com.apple.Preview'
+    run = 'layout floating'
+
+
+# ═══════════════════════ MAIN MODE ═══════════════════════
+[mode.main.binding]
+
+# ───── Focus: skips floating windows, wraps around (Linux: Super+arrows) ─────
+cmd-alt-left  = 'focus --ignore-floating --boundaries-action wrap-around-the-workspace left'
+cmd-alt-down  = 'focus --ignore-floating --boundaries-action wrap-around-the-workspace down'
+cmd-alt-up    = 'focus --ignore-floating --boundaries-action wrap-around-the-workspace up'
+cmd-alt-right = 'focus --ignore-floating --boundaries-action wrap-around-the-workspace right'
+
+# ───── Move the window (Linux: Super+Shift+arrows) ─────
+cmd-alt-shift-left  = 'move left'
+cmd-alt-shift-down  = 'move down'
+cmd-alt-shift-up    = 'move up'
+cmd-alt-shift-right = 'move right'
+
+# ───── Swap two windows (Linux: Super+Shift+Alt+arrows; Ctrl stands in for Alt) ─────
+cmd-alt-ctrl-shift-left  = 'swap left'
+cmd-alt-ctrl-shift-down  = 'swap down'
+cmd-alt-ctrl-shift-up    = 'swap up'
+cmd-alt-ctrl-shift-right = 'swap right'
+
+# ───── Resize: right and down grow, left and up shrink (Linux: Super+Ctrl+arrows) ─────
+cmd-alt-ctrl-left  = 'resize width -50'
+cmd-alt-ctrl-right = 'resize width +50'
+cmd-alt-ctrl-up    = 'resize height -50'
+cmd-alt-ctrl-down  = 'resize height +50'
+
+# ───── Layout ─────
+cmd-alt-comma   = 'layout tiles accordion'      # Linux cycles 4 layouts; AeroSpace has these 2
+cmd-alt-slash   = 'layout horizontal vertical'  # Linux: toggle split
+cmd-alt-r       = 'balance-sizes'               # Linux: cycle column widths; closest here
+cmd-alt-space   = 'layout floating tiling'      # Linux: Super+Alt+Space
+cmd-alt-f       = 'fullscreen --no-outer-gaps'  # Linux: Super+F
+cmd-alt-shift-f = 'fullscreen'                  # Linux: Super+Shift+F (maximize, keeps gaps)
+
+# ───── Workspaces (Linux: Super+1-9, Super+0 new temporary; Shift sends the window) ─────
+cmd-alt-1 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 1-Claude'
+cmd-alt-2 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 2-web'
+cmd-alt-3 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 3-code'
+cmd-alt-4 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 4-term'
+cmd-alt-5 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 5-chat'
+cmd-alt-6 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 6-media'
+cmd-alt-7 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 7-notes'
+cmd-alt-8 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 8-misc'
+cmd-alt-9 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu go 9-Gaming'
+cmd-alt-0 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu new'
+
+cmd-alt-shift-1 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 1-Claude'
+cmd-alt-shift-2 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 2-web'
+cmd-alt-shift-3 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 3-code'
+cmd-alt-shift-4 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 4-term'
+cmd-alt-shift-5 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 5-chat'
+cmd-alt-shift-6 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 6-media'
+cmd-alt-shift-7 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 7-notes'
+cmd-alt-shift-8 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 8-misc'
+cmd-alt-shift-9 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send 9-Gaming'
+cmd-alt-shift-0 = 'exec-and-forget nu ~/.config/aerospace/workspace.nu send-new'
+
+# Fn+Up / Fn+Down: previous / next workspace with windows on this monitor
+cmd-alt-pageUp   = 'exec-and-forget nu ~/.config/aerospace/workspace.nu step prev'
+cmd-alt-pageDown = 'exec-and-forget nu ~/.config/aerospace/workspace.nu step next'
+
+# Swap the two monitors' workspaces (Linux: Super+Tab)
+cmd-alt-tab = 'exec-and-forget nu ~/.config/aerospace/workspace.nu swap'
+
+# ───── Monitors (Linux: Super+- / Super+=; Shift sends the window) ─────
+cmd-alt-minus       = 'focus-monitor --wrap-around prev'
+cmd-alt-equal       = 'focus-monitor --wrap-around next'
+cmd-alt-shift-minus = 'move-node-to-monitor --focus-follows-window --wrap-around prev'
+cmd-alt-shift-equal = 'move-node-to-monitor --focus-follows-window --wrap-around next'
+
+# ───── Config ─────
+cmd-alt-shift-c         = 'reload-config'
+cmd-alt-shift-semicolon = 'mode service'
+
+# ═══════════════════════ SERVICE MODE ═══════════════════════
+# Rarely used. Esc returns to main mode.
+[mode.service.binding]
+esc       = ['reload-config', 'mode main']
+r         = ['flatten-workspace-tree', 'mode main']          # reset the layout
+f         = ['layout floating tiling', 'mode main']          # toggle float
+backspace = ['close-all-windows-but-current', 'mode main']   # close peers
+
+# Join with a neighbour: AeroSpace has no dwindle, so this is how to build splits by hand.
+left  = ['join-with left',  'mode main']
+down  = ['join-with down',  'mode main']
+up    = ['join-with up',    'mode main']
+right = ['join-with right', 'mode main']

@@ -435,6 +435,7 @@
       "*.orig"
       "*.rej"
       ".claude/*"
+      ".scratch/"
     ];
   };
 

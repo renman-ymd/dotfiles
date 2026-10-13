@@ -24,6 +24,12 @@ The machines in scope:
 | [05-helium.md](05-helium.md) | Helium as the streaming box's browser: packaging, Widevine, kiosk and Wayland, footprint |
 | [06-usb-display.md](06-usb-display.md) | The streaming box's USB-to-HDMI adapter: chipset families, NixOS drivers, Cage and wlroots, the GPU to render on, audio, the lid, an X11 fallback |
 | [07-apps.md](07-apps.md) | Single-window web apps, Teams and WhatsApp clients, Claude on Linux, Spotifast, Deezer, Steam, GeForce NOW and Vesktop on Linux |
+| [08-hunk-on-x86_64-linux.md](08-hunk-on-x86_64-linux.md) | Why the bun2nix `systems` override breaks hunk on x86_64-linux, and the wiring that evaluates on both platforms |
+| [09-pgp-subkeys-jj-and-github.md](09-pgp-subkeys-jj-and-github.md) | jj's `signing.key` with a subkey selector, how GnuPG picks a subkey, GitHub's handling of new and revoked subkeys |
+| [10-passphrase-keychains.md](10-passphrase-keychains.md) | Keeping SSH and PGP passphrases in the macOS keychain and in the Secret Service on NixOS, per login manager |
+| [11-lix-uninstall-handover.md](11-lix-uninstall-handover.md) | Handing the work-machine remove script over to Lix's uninstaller, what it leaves behind, and the throwaway-test checklist |
+| [12-claude-config.md](12-claude-config.md) | Managing `~/.claude` with Home Manager, Claude Code's runtime writes, the `skills` CLI, keeping local edits on mattpocock/skills |
+| [13-scripts-and-nushell-modules.md](13-scripts-and-nushell-modules.md) | Packaging jj-ci and ufda, loading Nushell modules from the store, jj-ci's aliases and completions |
 
 ## Short answers
 
@@ -49,7 +55,7 @@ Split them by how they can be handled.
    - **Why PGP:** a PGP key carries its email in its user ID, so a signature names both the machine and the address. An SSH signature would name the machine, but not the email.
    - **Work identity:** its key lives only on the work machine. A jj `--when.repositories` scope can switch identity per repository.
    - **Revocation:** GnuPG writes a revocation certificate to `openpgp-revocs.d` when it generates a key ([GnuPG manual](https://www.gnupg.org/documentation/manuals/gnupg/OpenPGP-Key-Management.html), for `--generate-key`). Copying it into Vaultwarden lets you revoke a lost machine's key.
-   - **Decided 2026-10-12:** per-machine signing subkeys under one primary key ([ADR 0001](../../adr/0001-one-signing-subkey-per-machine.md)). Whether jj accepts a subkey selector such as a trailing `!` is unverified.
+   - **Decided 2026-10-12:** per-machine signing subkeys under one primary key ([ADR 0001](../../adr/0001-one-signing-subkey-per-machine.md)). jj 0.45.1 accepts `signing.key = "<subkey fingerprint>!"` and signs with exactly that subkey, tested on throwaway keys ([09 §4](09-pgp-subkeys-jj-and-github.md#4-q1-does-signingkey--subkey-fpr-work-in-jj-0451)).
    - **Not a stated rule:** no GitHub or OpenSSH page states "one key per device" as a rule. Here it's your traceability requirement, not a best practice.
 2. **Runtime secrets (Wi-Fi passwords, API tokens) are encrypted in the repo** with sops-nix or agenix and decrypted per host with that host's own age key. Both have NixOS, nix-darwin and Home Manager modules ([02 §1](02-secrets.md#1-sops-nix-vs-agenix-agenix-rekey-and-ragenix-in-a-line-each)). The difference that matters in a public repo: sops leaves key names and structure in clear text, while agenix files are opaque. sops-nix also has templates. That choice is still open.
 3. **Vaultwarden holds the one key that edits the encrypted files**, fetched when you edit (`SOPS_AGE_KEY_CMD` with `rbw` or `bw`) and never copied to hosts. It is not a runtime dependency, so rebuilds don't need your friend's server ([02 §2](02-secrets.md#2-bootstrapping-a-new-machine-and-the-role-of-vaultwarden)).

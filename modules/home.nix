@@ -155,6 +155,7 @@
   # interactive only
   programs.nushell = {
     enable = true;
+    loadSessionVariables = true;
 
     shellAliases = {
       cat = "bat --style=auto";
@@ -173,7 +174,7 @@
         "/etc/profiles/per-user/renman-ymd/bin"
         "/run/current-system/sw/bin"
         "/nix/var/nix/profiles/default/bin"
-      ])
+      ] | uniq)
 
       if ("SSH_CONNECTION" in $env) {
         $env.EDITOR = "nano"

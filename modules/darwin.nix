@@ -72,6 +72,7 @@
       # Passing the ghostyy terminfo here make the daemon aware of xterm-ghostty
       EnvironmentVariables = {
         TERMINFO = "${pkgs.ghostty-bin.terminfo}/share/terminfo";
+        NIX_SSL_CERT_FILE = config.environment.variables.NIX_SSL_CERT_FILE;
         PATH = "${config.users.users."renman-ymd".home}/.nix-profile/bin:/etc/profiles/per-user/renman-ymd/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin";
       };
       RunAtLoad = true;
@@ -160,6 +161,15 @@
     bash-prompt-prefix = "(nix:$name) ";
     extra-nix-path = [ "nixpkgs=flake:nixpkgs" ];
   };
+
+  # Nix-built OpenSSL falls back to the CA bundle in root's default profile,
+  # which nix-darwin never updates, whenever NIX_SSL_CERT_FILE is unset.
+  # envVariables is applied by launchctl setenv at switch time only and is
+  # lost at logout, so the Emacs agent also sets the variable itself.
+  launchd.user.envVariables.NIX_SSL_CERT_FILE = config.environment.variables.NIX_SSL_CERT_FILE;
+  security.sudo.extraConfig = ''
+    Defaults:root,%admin env_keep+=NIX_SSL_CERT_FILE
+  '';
 
   system.primaryUser = "renman-ymd";
   system.stateVersion = 6;

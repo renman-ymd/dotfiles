@@ -10,6 +10,7 @@
   # changes across a reboot is enough to wedge the keyring permanently.
   # localHostName follows hostName; ComputerName is left alone.
   networking.hostName = "Renauds-MacBook-Air";
+  networking.applicationFirewall.enable = true;
 
   # Use Lix as the Nix implementation
   nix.package = lixpkg;

@@ -33,6 +33,18 @@ _Avoid_: recipe, profile (clashes with Nix profiles)
 A host that is no machine of its own, and that holds the choices several hosts share. A host imports it and then adds or overrides.
 _Avoid_: common host, base
 
+**Editor core**:
+The Emacs configuration every machine gets. It is light on purpose: beyond Nix and Nushell, language support comes from a switch (C, on personal machines only) or from an add-on.
+_Avoid_: base (clashes with shared host), light config (clashes with work-machine config)
+
+**Add-on**:
+An untracked `.emacs-addon/` folder in one project, holding what Emacs needs for that project's tooling: language servers, grammars, packages and a configuration file. An agent writes it, a pin guards it, and deleting it loses nothing.
+_Avoid_: plugin, overlay, project config
+
+**Project server**:
+The Emacs server started for one project root, inside that project's environment and its add-on. There is no shared daemon.
+_Avoid_: daemon, instance
+
 **Work-machine config**:
 The single config that the install script puts on a work machine and the remove script takes away.
 _Avoid_: kit, light config, emergency config

@@ -1,0 +1,22 @@
+# One Emacs server per project, with an untracked add-on
+
+Emacs runs as one server per project, started on demand by a Nushell launcher inside the project's own direnv environment, with the project's add-on environment composed on top. There is no long-lived shared daemon. The add-on is an untracked `.emacs-addon/` folder holding a small flake (language servers, debug adapters, tree-sitter grammars, extra Emacs packages) and one Elisp file; the server finds them through `EMACSLOADPATH`, `EMACSNATIVELOADPATH` and `EMACS_ADDON_INIT`, so the editor core, the configuration every machine gets, knows nothing about any project. The editor core is light by default and the same on every machine, the work machine included. C support (simpc-mode, clangd) is a switch that is on for personal machines and off on the work machine, where an add-on provides it if it is ever needed. The jj commit window is a plain `emacs -nw -Q` that loads one built-in-only file. Trust is `direnv allow` on the add-on's `.envrc`, plus a content pin on the files direnv does not hash. The evidence, the sketches and the open questions are in [the report](../research/emacs-per-project/report.md).
+
+## Considered options
+
+- **One shared daemon with per-buffer environments (envrc.el).** It is the shape the repo had, and it keeps buffers from all projects in one session. It needs code for everything the process model gives for free: a second environment layer has no support (one env directory per buffer), temp buffers lose the environment unless advised, add-on Elisp is global and stays until a restart, two projects cannot hold different builds of one tree-sitter grammar, and trust has to be written in Elisp. It also needs a supervisor on every platform: a launchd agent on the Air and a systemd user service elsewhere, and Home Manager is the only toolbox that declares both ([ADR 0002](0002-toolboxes-and-hosts-in-one-flake.md)).
+- **A plain `emacs -nw` per window, no server.** The simplest model, but every window pays the start-up cost. It is kept for the commit window only.
+- **A separate, smaller Emacs config on the work machine and the full one elsewhere.** It was the plan in the multi-machine map. The new editor core is light for everyone and what differs is a switch and the add-ons, so there is one configuration to maintain.
+- **A tracked add-on in each repository, or `devenv.local.nix`.** Teammates would see it, and a new input in `devenv.local.nix` changes the tracked `devenv.lock`. The add-on must also work for flake projects.
+- **A shared library of add-ons.** The agent writes each add-on for its project, so there is nothing to share, and an add-on can be deleted without loss.
+
+## Consequences
+
+- No buffers are shared across projects, each open project costs one extra Emacs process, and the first `em` in a project waits for direnv.
+- Real start-up time, memory use, language-server warm-up and macOS file-access (TCC) behaviour for a shell-started server are unmeasured on the Air. Ticket 34 measures them. If start-up proves too slow, the fallback is a shared daemon again; the editor core, the add-on flake and the pin carry over.
+- If a shell-started server passes the TCC test, the Emacs launchd agent and the re-signed Emacs binary are dropped (ticket 39) and ticket 16 shrinks to nix-daemon, the app loop and pinentry-mac.
+- `direnv allow` covers only the `.envrc`, so the add-on's `.envrc` carries a hash of `flake.nix`, `flake.lock` and `addon.el`, checked by a function in a direnv library file. The pin gates starting a server; a running server keeps what it loaded.
+- Nothing global provides devenv: a devenv project's `.envrc` already begins with a `use flake` that exposes only `devenv`.
+- The feature is `editor` (`renman-ymd.editor.enable`), with Home Manager options only. `.emacs-addon/` and `.wakatime-project` join the global ignore list, which jj reads from `$XDG_CONFIG_HOME/git/ignore`.
+- On the work machine the remove script stops the servers, deletes the launcher's state directory and lists any `.emacs-addon/` folders left in employer repositories (ticket 40).
+- This supersedes the map's separate Emacs config for the work machine and the daemon in the editor feature, and the heavy/light split in `PLAN.md` (tickets 11, 16, 17 and 36).

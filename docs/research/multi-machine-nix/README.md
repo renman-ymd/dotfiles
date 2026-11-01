@@ -22,7 +22,7 @@ The machines in scope:
 | [03-work-machine-config.md](03-work-machine-config.md) | Installing and removing Nix, detecting an existing Nix, ways to ship tools and config, every trace left behind, script constraints |
 | [04-streaming-box.md](04-streaming-box.md) | Crunchyroll and Widevine on Linux, NixOS as an appliance, Gentoo for the same job, other options |
 | [05-helium.md](05-helium.md) | Helium as the streaming box's browser: packaging, Widevine, kiosk and Wayland, footprint |
-| [06-usb-display.md](06-usb-display.md) | The streaming box's USB-to-HDMI adapter: chipset families, NixOS drivers, Cage and wlroots, the GPU to render on, audio, the lid, an X11 fallback |
+| [06-usb-display.md](06-usb-display.md) | (Moot: the box has no such adapter.) The streaming box's USB-to-HDMI adapter: chipset families, NixOS drivers, Cage and wlroots, the GPU to render on, audio, the lid, an X11 fallback |
 | [07-apps.md](07-apps.md) | Single-window web apps, Teams and WhatsApp clients, Claude on Linux, Spotifast, Deezer, Steam, GeForce NOW and Vesktop on Linux |
 | [08-hunk-on-x86_64-linux.md](08-hunk-on-x86_64-linux.md) | Why the bun2nix `systems` override breaks hunk on x86_64-linux, and the wiring that evaluates on both platforms |
 | [09-pgp-subkeys-jj-and-github.md](09-pgp-subkeys-jj-and-github.md) | jj's `signing.key` with a subkey selector, how GnuPG picks a subkey, GitHub's handling of new and revoked subkeys |
@@ -101,6 +101,7 @@ NixOS (decided 2026-10-12). Gentoo wouldn't make the box meaningfully lighter th
 - **Crunchyroll** lists Chrome, Firefox, Edge and Safari at version 117 or newer, and names no operating systems. Linux is neither listed nor excluded. The resolution you'll get on a Linux browser is undocumented and has to be measured on the projector ([04 §1](04-streaming-box.md#1-crunchyroll-on-linux)).
 - **NixOS setup:** `services.cage` runs one browser full screen and doubles as the autologin. Deploy from the Framework with `nixos-rebuild --target-host`, and set `system.autoUpgrade` to `operation = "boot"` so no update restarts it mid-episode ([04 §3](04-streaming-box.md#3-nixos-as-an-appliance)).
 - **Wired only:** nixos-anywhere's "no Wi-Fi-only target" requirement is met, so it can install the box remotely. It still needs kexec support and at least 1 GB of RAM, both unchecked. No Wi-Fi secret is needed at first boot.
+- **Corrected 2026-11-01: there is no USB display adapter.** The box, an ASUS UX303LB, sends video and sound through its own HDMI port on the Intel GPU. Its USB adapter is for Ethernet. Section 06 and the rest of this bullet describe an adapter that turned out not to exist.
 - **Video goes out through a USB-A to HDMI adapter** ([06](06-usb-display.md)). The adapter's chipset decides the driver:
   - **Old USB 2.0 DisplayLink:** the in-kernel `udl` driver.
   - **USB 3.0 DisplayLink:** the `evdi` module plus an unfree daemon. Its nixpkgs package needs the vendor's zip downloaded by hand, again whenever nixpkgs updates it.

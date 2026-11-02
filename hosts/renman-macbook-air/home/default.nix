@@ -50,15 +50,6 @@
     # --- Dev environments ---
     devenv
 
-    # --- Markdown viewers ---
-    glow        # TUI/Pager
-    frogmouth   # Full TUI browser
-    go-grip     # Browser preview + live reload
-
-    # --- Document & media ---
-    pandoc
-    poppler
-
     # --- Window manager ---
     aerospace
 

@@ -4,5 +4,6 @@
     ./editor
     ./vcs
     ./cli
+    ./docs
   ];
 }

@@ -26,7 +26,6 @@ in
 
     programs.nushell = {
       shellAliases = {
-        em = "emacsclient -s main -nw";
         emg = "emacsclient -s main -c";
         eml = "emacs -nw --init-dir ~/.config/emacs-light";
         # em-kill defined as def below: parenthesis interpretation
@@ -35,7 +34,7 @@ in
 
       extraEnv = builtins.readFile ./env.nu;
       extraConfig = lib.mkAfter (lib.concatStringsSep "\n" (
-        [ (builtins.readFile ./config.nu) ]
+        [ (builtins.readFile ./config.nu) (builtins.readFile ./em.nu) ]
         ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin (builtins.readFile ./em-restart.darwin.nu)
       ));
     };

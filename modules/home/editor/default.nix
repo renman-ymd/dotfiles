@@ -33,7 +33,10 @@ in
       };
 
       extraEnv = builtins.readFile ./env.nu;
-      extraConfig = lib.mkAfter (builtins.readFile ./config.nu);
+      extraConfig = lib.mkAfter (lib.concatStringsSep "\n" (
+        [ (builtins.readFile ./config.nu) ]
+        ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin (builtins.readFile ./em-restart.darwin.nu)
+      ));
     };
 
     # The emacs daemon (launchd agent in modules/darwin/editor) must run a

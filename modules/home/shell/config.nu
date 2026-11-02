@@ -1,10 +1,10 @@
 source ~/.config/nushell/completions/jj.nu
 
-def copypath [] { $env.PWD | pbcopy }
-def copyfile [file: path] { open --raw $file | pbcopy }
+def copypath [] { $env.PWD | @copy@ }
+def copyfile [file: path] { open --raw $file | @copy@ }
 
 def google [query: string] {
-  ^open $"https://www.google.com/search?q=($query | url encode)"
+  ^@open@ $"https://www.google.com/search?q=($query | url encode)"
 }
 
 def extract [file: path] {

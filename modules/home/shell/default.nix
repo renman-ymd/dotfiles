@@ -1,6 +1,12 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.renman-ymd.shell;
+
+  platform =
+    if pkgs.stdenv.hostPlatform.isDarwin then {
+      copy = "pbcopy";
+      open = "open";
+    } else throw "renman-ymd.shell: no clipboard and open commands for this platform yet";
 in
 {
   options.renman-ymd.shell.enable = lib.mkEnableOption "Nushell, Starship, zoxide, carapace and a bare zsh login shell";
@@ -76,7 +82,10 @@ in
       extraEnv = builtins.readFile ./env.nu;
 
       # After the zoxide, starship and carapace integrations Home Manager adds.
-      extraConfig = lib.mkAfter (builtins.readFile ./config.nu);
+      extraConfig = lib.mkAfter (builtins.replaceStrings
+        [ "@copy@" "@open@" ]
+        [ platform.copy platform.open ]
+        (builtins.readFile ./config.nu));
     };
 
     # Generate jj nushell completions script

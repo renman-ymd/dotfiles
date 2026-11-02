@@ -1,5 +1,3 @@
-source ~/.config/nushell/completions/jj.nu
-
 def copypath [] { $env.PWD | @copy@ }
 def copyfile [file: path] { open --raw $file | @copy@ }
 

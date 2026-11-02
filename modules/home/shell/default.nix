@@ -83,11 +83,5 @@ in
         [ platform.copy platform.open ]
         (builtins.readFile ./config.nu));
     };
-
-    # Generate jj nushell completions script
-    home.activation.jjNushellCompletions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      mkdir -p "$HOME/.config/nushell/completions"
-      ${pkgs.jujutsu}/bin/jj util completion nushell > "$HOME/.config/nushell/completions/jj.nu"
-    '';
   };
 }

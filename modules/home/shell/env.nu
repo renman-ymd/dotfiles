@@ -7,7 +7,6 @@ $env.PATH = ($env.PATH | prepend [
 
 $env.BROWSER = "zen-beta"
 $env.LESS = "-RFMiS --incsearch --use-color -j.5"
-$env.DELTA_PAGER = "less -RFEX --mouse --wheel-lines=3"
 
 $env.MANPAGER = "sh -c 'col -bx | bat -l man -p'"
 $env.MANROFFOPT = "-c"

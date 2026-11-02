@@ -8,5 +8,6 @@
     ./mac-apps
     ./gaming
     ./media
+    ./nix
   ];
 }

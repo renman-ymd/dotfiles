@@ -10,5 +10,6 @@
     ./browser
     ./keys
     ./tiling
+    ./chat
   ];
 }

@@ -5,4 +5,5 @@
   renman-ymd.browser.enable = lib.mkDefault true;
   renman-ymd.keys.enable = lib.mkDefault true;
   renman-ymd.tiling.enable = lib.mkDefault true;
+  renman-ymd.chat.enable = lib.mkDefault true;
 }

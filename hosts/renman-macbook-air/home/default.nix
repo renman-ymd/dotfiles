@@ -22,14 +22,7 @@
     discordo
     alt-tab-macos
     maccy
-    pinentry_mac
   ];
-
-  home.file.".gnupg/gpg-agent.conf".text = ''
-    pinentry-program ${pkgs.pinentry_mac}/bin/pinentry-mac
-    default-cache-ttl 600
-    max-cache-ttl 7200
-  '';
 
   # macOS TCC pins permissions (screen recording, accessibility, mic...) to an
   # app's code-signing identity. Nix-built apps are ad-hoc signed, so their
@@ -65,27 +58,4 @@
       warnEcho "resignAdhocApps: nix-selfsign certificate not found in keychain, skipping"
     fi
   '';
-
-  # Private keys not in repo.
-  programs.ssh = {
-    enable = true;
-    enableDefaultConfig = false;
-    settings = {
-      "*" = {
-        AddKeysToAgent = "yes";
-        UseKeychain = "yes";
-      };
-      "github.com" = {
-        User = "git";
-        IdentityFile = "~/.ssh/id_ed25519";
-      };
-    };
-  };
-
-  # Private keyring not in repo
-  # HM services.gpg-agent is systemd only
-  programs.gpg = {
-    enable = true;
-    settings.default-key = "CB49EE78601E1E1B";
-  };
 }

@@ -3,6 +3,7 @@
   imports = [
     ../../../modules/home
     ../../shared-dev/home
+    ../../shared-personal/home
   ];
 
   home.stateVersion = "25.11";
@@ -49,15 +50,6 @@
     # --- Dev environments ---
     devenv
 
-    # --- CLI utilities ---
-    ripgrep
-    fd
-    bat
-    eza
-    jq
-    fzf
-    htop
-
     # --- Markdown viewers ---
     glow        # TUI/Pager
     frogmouth   # Full TUI browser
@@ -94,8 +86,6 @@
 
   # Config file sourced from repo
   xdg.configFile = {
-    "bat/config".source = ../../../configs/bat/config;
-    "bat/themes".source = ../../../configs/bat/themes;
     # "lazygit/config.yml".source = ../../../configs/lazygit/config.yml;
     "aerospace/aerospace.toml".source = ../../../configs/aerospace/aerospace.toml;
   };

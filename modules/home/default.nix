@@ -3,5 +3,6 @@
     ./shell
     ./editor
     ./vcs
+    ./cli
   ];
 }

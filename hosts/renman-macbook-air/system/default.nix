@@ -30,16 +30,9 @@
       # "zap" removes any cask/formula not in this list on darwin-rebuild
       cleanup = "zap";
     };
-    taps = [ "Sikarugir-App/sikarugir" ];
     casks = [
       "deezer"
-      "nvidia-geforce-now"
-      "steam"
-      { name = "Sikarugir-App/sikarugir/sikarugir"; trusted = true; }
     ];
-    masApps = {
-      "Wuthering Waves" = 6475033368;
-    };
   };
 
   # Garbage collection deletes store .app bundles, which macOS App Management

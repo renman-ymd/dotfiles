@@ -6,5 +6,6 @@
     ./terminal
     ./fonts
     ./mac-apps
+    ./gaming
   ];
 }

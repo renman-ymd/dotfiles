@@ -58,7 +58,7 @@
         lixpkg = nixpkgs-for-lix.legacyPackages."aarch64-darwin".lix;
       };
       modules = [
-        ./modules/darwin.nix
+        ./hosts/renman-macbook-air/system
         nix-index-database.darwinModules.nix-index
         { programs.nix-index-database.comma.enable = true; }
         home-manager.darwinModules.home-manager

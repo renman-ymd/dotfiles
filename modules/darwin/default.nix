@@ -7,5 +7,6 @@
     ./fonts
     ./mac-apps
     ./gaming
+    ./media
   ];
 }

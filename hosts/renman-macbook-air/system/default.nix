@@ -30,9 +30,6 @@
       # "zap" removes any cask/formula not in this list on darwin-rebuild
       cleanup = "zap";
     };
-    casks = [
-      "deezer"
-    ];
   };
 
   # Garbage collection deletes store .app bundles, which macOS App Management

@@ -39,9 +39,6 @@ in
       enableCompletion = false;   # nothing here to complete
 
       initContent = ''
-        export EDITOR='emacs -nw -Q'
-        export VISUAL='emacs -nw -Q'
-
         export BROWSER='zen-beta'
       '';
     };
@@ -72,17 +69,13 @@ in
         cat = "bat --style=auto";
         la = "ls --all";
         ll = "ls --all --long";
-        em = "emacsclient -s main -nw";
-        emg = "emacsclient -s main -c";
-        eml = "emacs -nw --init-dir ~/.config/emacs-light";
-        # em-kill defined as def below: parenthesis interpretation
-        # em-restart defined as def below: string interpolation
       };
 
-      extraEnv = builtins.replaceStrings
+      # PATH goes first: other features' snippets run commands found through it.
+      extraEnv = lib.mkBefore (builtins.replaceStrings
         [ "@profileDirectory@" ]
         [ config.home.profileDirectory ]
-        (builtins.readFile ./env.nu);
+        (builtins.readFile ./env.nu));
 
       # After the zoxide, starship and carapace integrations Home Manager adds.
       extraConfig = lib.mkAfter (builtins.replaceStrings

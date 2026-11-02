@@ -18,6 +18,24 @@ in
       "emacs-light/init.el".source = ./configs/emacs-light/init.el;
     };
 
+    programs.zsh.initContent = ''
+      export EDITOR='emacs -nw -Q'
+      export VISUAL='emacs -nw -Q'
+    '';
+
+    programs.nushell = {
+      shellAliases = {
+        em = "emacsclient -s main -nw";
+        emg = "emacsclient -s main -c";
+        eml = "emacs -nw --init-dir ~/.config/emacs-light";
+        # em-kill defined as def below: parenthesis interpretation
+        # em-restart defined as def below: string interpolation
+      };
+
+      extraEnv = builtins.readFile ./env.nu;
+      extraConfig = lib.mkAfter (builtins.readFile ./config.nu);
+    };
+
     # The emacs daemon (launchd agent in modules/darwin/editor) must run a
     # binary with a stable code-signing identity or TCC grants die on every
     # emacs update. Store binaries are read-only and can't be re-signed in

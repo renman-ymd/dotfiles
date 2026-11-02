@@ -72,7 +72,7 @@
             zen-browser.homeModules.default
             hunk.homeManagerModules.default
           ];
-          home-manager.users."renman-ymd" = import ./modules/home.nix;
+          home-manager.users."renman-ymd" = import ./hosts/renman-macbook-air/home;
         }
       ];
     };

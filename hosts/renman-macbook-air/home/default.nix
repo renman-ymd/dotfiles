@@ -130,18 +130,18 @@
 
   # Config file sourced from repo
   xdg.configFile = {
-    "starship.toml".source = ../configs/starship/starship.toml;
-    "starship-jj/starship-jj.toml".source = ../configs/starship/starship-jj.toml;
-    "bat/config".source = ../configs/bat/config;
-    "bat/themes".source = ../configs/bat/themes;
-    # "lazygit/config.yml".source = ../configs/lazygit/config.yml;
-    "emacs/early-init.el".source = ../configs/emacs/early-init.el;
-    "emacs/init.el".source = ../configs/emacs/init.el;
-    "emacs-light/early-init.el".source = ../configs/emacs-light/early-init.el;
-    "emacs-light/init.el".source = ../configs/emacs-light/init.el;
-    "aerospace/aerospace.toml".source = ../configs/aerospace/aerospace.toml;
+    "starship.toml".source = ../../../configs/starship/starship.toml;
+    "starship-jj/starship-jj.toml".source = ../../../configs/starship/starship-jj.toml;
+    "bat/config".source = ../../../configs/bat/config;
+    "bat/themes".source = ../../../configs/bat/themes;
+    # "lazygit/config.yml".source = ../../../configs/lazygit/config.yml;
+    "emacs/early-init.el".source = ../../../configs/emacs/early-init.el;
+    "emacs/init.el".source = ../../../configs/emacs/init.el;
+    "emacs-light/early-init.el".source = ../../../configs/emacs-light/early-init.el;
+    "emacs-light/init.el".source = ../../../configs/emacs-light/init.el;
+    "aerospace/aerospace.toml".source = ../../../configs/aerospace/aerospace.toml;
     "jj/scripts/pr-create.nu" = {
-      source = ../configs/jj/scripts/pr-create.nu;
+      source = ../../../configs/jj/scripts/pr-create.nu;
       executable = true;
     };
   };

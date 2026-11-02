@@ -23,7 +23,16 @@
         EnvironmentVariables = {
           TERMINFO = "${pkgs.ghostty-bin.terminfo}/share/terminfo";
           NIX_SSL_CERT_FILE = config.environment.variables.NIX_SSL_CERT_FILE;
-          PATH = "${config.users.users."renman-ymd".home}/.nix-profile/bin:/etc/profiles/per-user/renman-ymd/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+          PATH = lib.concatStringsSep ":" [
+            "${config.users.users."renman-ymd".home}/.nix-profile/bin"
+            "${config.home-manager.users."renman-ymd".home.profileDirectory}/bin"
+            "/run/current-system/sw/bin"
+            "/nix/var/nix/profiles/default/bin"
+            "/usr/bin"
+            "/bin"
+            "/usr/sbin"
+            "/sbin"
+          ];
         };
         RunAtLoad = true;
         # "Aqua" means: only start in graphical dekstop session

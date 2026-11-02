@@ -79,7 +79,10 @@ in
         # em-restart defined as def below: string interpolation
       };
 
-      extraEnv = builtins.readFile ./env.nu;
+      extraEnv = builtins.replaceStrings
+        [ "@profileDirectory@" ]
+        [ config.home.profileDirectory ]
+        (builtins.readFile ./env.nu);
 
       # After the zoxide, starship and carapace integrations Home Manager adds.
       extraConfig = lib.mkAfter (builtins.replaceStrings

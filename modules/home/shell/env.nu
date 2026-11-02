@@ -1,6 +1,6 @@
 $env.PATH = ($env.PATH | prepend [
   ($env.HOME + "/.nix-profile/bin")
-  "/etc/profiles/per-user/renman-ymd/bin"
+  "@profileDirectory@/bin"
   "/run/current-system/sw/bin"
   "/nix/var/nix/profiles/default/bin"
 ] | uniq)

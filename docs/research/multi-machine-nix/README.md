@@ -30,6 +30,8 @@ The machines in scope:
 | [11-lix-uninstall-handover.md](11-lix-uninstall-handover.md) | Handing the work-machine remove script over to Lix's uninstaller, what it leaves behind, and the throwaway-test checklist |
 | [12-claude-config.md](12-claude-config.md) | Managing `~/.claude` with Home Manager, Claude Code's runtime writes, the `skills` CLI, keeping local edits on mattpocock/skills |
 | [13-scripts-and-nushell-modules.md](13-scripts-and-nushell-modules.md) | Packaging jj-ci and ufda, loading Nushell modules from the store, jj-ci's aliases and completions |
+| [14-throwaway-macos-vm.md](14-throwaway-macos-vm.md) | Disposable macOS guests on Apple silicon for the work-script round trip: Tart, Lume, UTM and others, licences, Apple's limits |
+| [15-nixos-final-release-signal.md](15-nixos-final-release-signal.md) | A machine-checkable signal that a NixOS stable release is final, for the stable-bump workflow |
 
 ## Short answers
 

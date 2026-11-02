@@ -16,6 +16,7 @@ in
       "emacs/init.el".source = ./configs/emacs/init.el;
       "emacs-light/early-init.el".source = ./configs/emacs-light/early-init.el;
       "emacs-light/init.el".source = ./configs/emacs-light/init.el;
+      "direnv/lib/emacs-addon.sh".source = ./emacs-addon.sh;
     };
 
     programs.zsh.initContent = ''

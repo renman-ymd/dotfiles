@@ -25,7 +25,7 @@ in
       starship-jj
     ];
 
-    # competion for common command like docker, cargo...
+    # completion for common commands like docker, cargo...
     programs.carapace = {
       enable = true;
       enableNushellIntegration = true;

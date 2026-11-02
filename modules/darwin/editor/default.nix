@@ -19,7 +19,7 @@
           # and emacs itself creates that directory
           "--init-directory=${config.users.users."renman-ymd".home}/.config/emacs"
         ];
-        # Passing the ghostyy terminfo here make the daemon aware of xterm-ghostty
+        # Passing the ghostty terminfo here makes the daemon aware of xterm-ghostty
         EnvironmentVariables = {
           TERMINFO = "${pkgs.ghostty-bin.terminfo}/share/terminfo";
           NIX_SSL_CERT_FILE = config.environment.variables.NIX_SSL_CERT_FILE;
@@ -35,7 +35,7 @@
           ];
         };
         RunAtLoad = true;
-        # "Aqua" means: only start in graphical dekstop session
+        # "Aqua" means: only start in graphical desktop session
         LimitLoadToSessionType = "Aqua";
         # redirect output into a Log folder
         StandardOutPath = "/tmp/emacs-daemon.stdout.log";

@@ -203,7 +203,7 @@ in
 
         "merge-tools" = {
           difft.diff-args = [ "--color=always" "--display=side-by-side" "$left" "$right" ];
-  	difft-inline.diff-args = [ "--color=always" "--display=inline" "$left" "$right" ];
+          difft-inline.diff-args = [ "--color=always" "--display=inline" "$left" "$right" ];
           meld.merge-args = [ "$left" "$base" "$right" "-o" "$output" "--auto-merge" ];
         };
 

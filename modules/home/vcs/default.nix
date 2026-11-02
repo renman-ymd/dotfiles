@@ -87,6 +87,8 @@ in
         "*_archive"
         ".dir-locals.el"
         ".projectile"
+        ".emacs-addon/"
+        ".wakatime-project"
 
         # --- VSCode ---
         ".vscode/*"

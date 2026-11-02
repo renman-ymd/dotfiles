@@ -1,5 +1,10 @@
 { pkgs, lib, lixpkg, config, ... }: {
 
+  imports = [
+    ../../../modules/darwin
+    ../../shared-dev/system/darwin
+  ];
+
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   # Pin the hostname. With HostName unset macOS derives it from the network
@@ -14,9 +19,6 @@
 
   # Use Lix as the Nix implementation
   nix.package = lixpkg;
-
-  # zsh stays as the login shell (POSIX-compliant)
-  programs.zsh.enable = true;
 
   # System-wide packages
   environment.systemPackages = [

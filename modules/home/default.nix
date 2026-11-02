@@ -6,5 +6,6 @@
     ./cli
     ./docs
     ./dev
+    ./terminal
   ];
 }

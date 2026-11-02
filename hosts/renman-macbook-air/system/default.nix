@@ -21,11 +21,6 @@
   # Use Lix as the Nix implementation
   nix.package = lixpkg;
 
-  # System-wide packages
-  environment.systemPackages = [
-    pkgs.ghostty-bin
-  ];
-
   # Homebrew — GUI apps and nixpkgs gaps
   homebrew = {
     enable = true;

@@ -3,5 +3,6 @@
     ./shell
     ./editor
     ./dev
+    ./terminal
   ];
 }

@@ -5,7 +5,6 @@ $env.PATH = ($env.PATH | prepend [
   "/nix/var/nix/profiles/default/bin"
 ] | uniq)
 
-$env.BROWSER = "zen-beta"
 $env.LESS = "-RFMiS --incsearch --use-color -j.5"
 
 # $env.NU_LIB_DIRS = (

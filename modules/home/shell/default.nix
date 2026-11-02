@@ -37,10 +37,6 @@ in
     programs.zsh = {
       enable = true;
       enableCompletion = false;   # nothing here to complete
-
-      initContent = ''
-        export BROWSER='zen-beta'
-      '';
     };
 
     # nushell prompt

@@ -2,6 +2,12 @@
   options.renman-ymd.browser.enable = lib.mkEnableOption "the Zen browser";
 
   config = lib.mkIf config.renman-ymd.browser.enable {
+    programs.zsh.initContent = ''
+      export BROWSER='zen-beta'
+    '';
+
+    programs.nushell.extraEnv = builtins.readFile ./env.nu;
+
     # Zen Browser does not currently support macOS managed preferences
     # so the `policies` option has no effect on Darwin.
     programs.zen-browser = {

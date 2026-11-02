@@ -66,7 +66,6 @@ in
       loadSessionVariables = true;
 
       shellAliases = {
-        cat = "bat --style=auto";
         la = "ls --all";
         ll = "ls --all --long";
       };

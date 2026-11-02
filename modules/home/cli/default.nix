@@ -19,6 +19,11 @@ in
         "bat/config".source = ./configs/bat/config;
         "bat/themes".source = ./configs/bat/themes;
       };
+
+      programs.nushell = {
+        shellAliases.cat = "bat --style=auto";
+        extraEnv = builtins.readFile ./env.nu;
+      };
     })
 
     (lib.mkIf (cfg.enable && cfg.full.enable) {

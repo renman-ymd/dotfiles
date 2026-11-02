@@ -97,12 +97,6 @@
   # (standard behaviour since GnuPG 2.1) and creates the sockets itself,
   # which is what has actually been serving signing all along.
 
-  # Fonts – must be declared here on aarch63-darwin
-  # (because of a HM systemd Linux-only dependency)
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-  ];
-
   users.users."renman-ymd" = {
     name = "renman-ymd";
     home = "/Users/renman-ymd";

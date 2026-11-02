@@ -4,5 +4,6 @@
     ./editor
     ./dev
     ./terminal
+    ./fonts
   ];
 }

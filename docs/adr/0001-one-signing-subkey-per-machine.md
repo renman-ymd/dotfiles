@@ -11,4 +11,5 @@ Every machine signs commits with its own PGP subkey, and one personal primary ke
 ## Consequences
 
 - Enrolling or retiring a machine needs the primary key's secret. Either the primary visits the machine, or the new subkey's secret is exported to it once. Where the primary lives is a separate decision.
-- It is unverified whether jj's `signing.key` accepts a subkey selector (a trailing `!`). Check before relying on it.
+- Each machine pins its own subkey with `signing.key = "<subkey fingerprint>!"`. jj 0.45.1 passes the value unchanged to `gpg -u`, and the trailing `!` makes GnuPG sign with exactly that subkey ([research 09](../research/multi-machine-nix/09-pgp-subkeys-jj-and-github.md)). Without it, GnuPG picks the newest usable signing subkey.
+- GitHub can't update an uploaded key, so each new subkey means deleting the public key and adding it again. Commits already Verified stay Verified.

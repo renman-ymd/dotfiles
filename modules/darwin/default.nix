@@ -2,5 +2,6 @@
   imports = [
     ./shell
     ./editor
+    ./dev
   ];
 }

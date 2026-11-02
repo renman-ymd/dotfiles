@@ -3,6 +3,7 @@
   imports = [
     ../../../modules/darwin
     ../../shared-dev/system/darwin
+    ../../shared-personal/system/darwin
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -42,11 +43,6 @@
       "steam"
       "claude"
       { name = "Sikarugir-App/sikarugir/sikarugir"; trusted = true; }
-    ];
-    brews = [
-      "odin"
-      "odinfmt"
-      "ols"
     ];
     masApps = {
       "Wuthering Waves" = 6475033368;

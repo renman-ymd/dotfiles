@@ -6,4 +6,5 @@
   renman-ymd.keys.enable = lib.mkDefault true;
   renman-ymd.tiling.enable = lib.mkDefault true;
   renman-ymd.chat.enable = lib.mkDefault true;
+  renman-ymd.mac-apps.enable = lib.mkDefault true;
 }

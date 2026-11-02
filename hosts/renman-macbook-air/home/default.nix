@@ -13,11 +13,6 @@
     "/opt/homebrew/sbin"
   ];
 
-  home.packages = with pkgs; [
-    alt-tab-macos
-    maccy
-  ];
-
   # macOS TCC pins permissions (screen recording, accessibility, mic...) to an
   # app's code-signing identity. Nix-built apps are ad-hoc signed, so their
   # identity is the hash of the exact binary and every update silently revokes

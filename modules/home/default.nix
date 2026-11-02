@@ -11,5 +11,6 @@
     ./keys
     ./tiling
     ./chat
+    ./mac-apps
   ];
 }

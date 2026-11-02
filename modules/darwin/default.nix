@@ -5,5 +5,6 @@
     ./dev
     ./terminal
     ./fonts
+    ./mac-apps
   ];
 }

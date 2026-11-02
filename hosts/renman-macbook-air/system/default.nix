@@ -33,16 +33,12 @@
     taps = [ "Sikarugir-App/sikarugir" ];
     casks = [
       "deezer"
-      "utm"
       "nvidia-geforce-now"
       "steam"
-      "claude"
       { name = "Sikarugir-App/sikarugir/sikarugir"; trusted = true; }
     ];
     masApps = {
       "Wuthering Waves" = 6475033368;
-      "Floaty" = 6755633285;
-      "Keynotes" = 361285480;
     };
   };
 

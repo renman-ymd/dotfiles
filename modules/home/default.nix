@@ -8,5 +8,6 @@
     ./dev
     ./terminal
     ./browser
+    ./tiling
   ];
 }

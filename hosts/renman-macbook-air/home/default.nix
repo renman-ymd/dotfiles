@@ -14,9 +14,6 @@
   ];
 
   home.packages = with pkgs; [
-    # --- Window manager ---
-    aerospace
-
     # --- Miscellaneous ---
     vesktop
     # discord removed: its Squirrel updater refuses updates for nix-signed
@@ -33,12 +30,6 @@
     default-cache-ttl 600
     max-cache-ttl 7200
   '';
-
-  # Config file sourced from repo
-  xdg.configFile = {
-    # "lazygit/config.yml".source = ../../../configs/lazygit/config.yml;
-    "aerospace/aerospace.toml".source = ../../../configs/aerospace/aerospace.toml;
-  };
 
   # macOS TCC pins permissions (screen recording, accessibility, mic...) to an
   # app's code-signing identity. Nix-built apps are ad-hoc signed, so their

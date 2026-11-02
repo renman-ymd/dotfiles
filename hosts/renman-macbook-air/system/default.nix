@@ -1,4 +1,4 @@
-{ pkgs, lib, lixpkg, config, ... }: {
+{ ... }: {
 
   imports = [
     ../../../modules/darwin

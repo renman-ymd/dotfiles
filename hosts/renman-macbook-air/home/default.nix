@@ -14,42 +14,6 @@
   ];
 
   home.packages = with pkgs; [
-    # --- Language runtimes ---
-    go
-    rustc
-    cargo
-    clippy
-    rustfmt
-    python3
-    ghc
-    cabal-install
-    bun
-    nodejs
-    zig
-    jdk
-    kotlin
-    # odin           # installed via homebrew; nixpkgs lacks maintenance
-
-    # --- C/C++ extras ---
-    # clang/clang++ and make are already provided by Xcode CLT
-    cmake
-    meson
-    ninja
-
-    # --- Language servers ---
-    gopls
-    rust-analyzer
-    pyright
-    haskell-language-server
-    typescript-language-server
-    zls
-    clang-tools
-    kotlin-language-server
-    nil
-
-    # --- Dev environments ---
-    devenv
-
     # --- Window manager ---
     aerospace
 
@@ -69,11 +33,6 @@
     default-cache-ttl 600
     max-cache-ttl 7200
   '';
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;   # faster nix-shell
-  };
 
   # Config file sourced from repo
   xdg.configFile = {

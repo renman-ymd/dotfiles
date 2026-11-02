@@ -5,5 +5,6 @@
     ./vcs
     ./cli
     ./docs
+    ./dev
   ];
 }

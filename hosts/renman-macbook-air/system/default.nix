@@ -31,13 +31,6 @@
     };
   };
 
-  # No launchd agent for gpg-agent on purpose. "--supervised" speaks the
-  # systemd socket-activation protocol (LISTEN_FDS/LISTEN_FDNAMES), which
-  # launchd does not provide, so the unit died at startup on every launch
-  # and KeepAlive respawned it forever. gpg starts the agent on demand
-  # (standard behaviour since GnuPG 2.1) and creates the sockets itself,
-  # which is what has actually been serving signing all along.
-
   users.users."renman-ymd" = {
     name = "renman-ymd";
     home = "/Users/renman-ymd";

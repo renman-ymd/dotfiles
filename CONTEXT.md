@@ -34,16 +34,24 @@ A host that is no machine of its own, and that holds the choices several hosts s
 _Avoid_: common host, base
 
 **Editor core**:
-The Emacs configuration every machine gets. It is light on purpose: beyond Nix and Nushell, language support comes from a switch (C, on personal machines only) or from an add-on.
+The Emacs configuration every machine gets. It is light on purpose: it supports the core languages, and C behind a switch (on personal machines); every other language comes from an add-on.
 _Avoid_: base (clashes with shared host), light config (clashes with work-machine config)
+
+**Core language**:
+A language the editor core supports on every machine because projects share it, such as Nix, Nushell, Markdown, YAML or TOML. An add-on brings at most its language server.
+_Avoid_: global language
 
 **Add-on**:
 An untracked `.emacs-addon/` folder in one project, holding what Emacs needs for that project's tooling: language servers, grammars, packages and a configuration file. An agent writes it, a pin guards it, and deleting it loses nothing.
 _Avoid_: plugin, overlay, project config
 
 **Project server**:
-The Emacs server started for one project root, inside that project's environment and its add-on. There is no shared daemon.
+The Emacs server started for one project root, inside that project's environment and its add-on. Files outside any project open in the core server instead.
 _Avoid_: daemon, instance
+
+**Core server**:
+The one Emacs server for files outside any project: the editor core with no project environment. Like a project server, it starts on demand and stops when idle.
+_Avoid_: main daemon, shared daemon, fallback server
 
 **Work-machine config**:
 The single config that the install script puts on a work machine and the remove script takes away.

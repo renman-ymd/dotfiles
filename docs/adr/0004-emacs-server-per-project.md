@@ -19,6 +19,7 @@ Emacs runs as one server per project, started on demand by a Nushell launcher in
 - `direnv allow` covers only the `.envrc`, so the add-on's `.envrc` carries a hash of `flake.nix`, `flake.lock` and `addon.el`, checked by a function in a direnv library file. The pin gates starting a server; a running server keeps what it loaded.
 - Tools every project uses stay in the user's profile and never go into an add-on. Among language servers that is `nil`, Nushell's built-in server, Harper, and clangd where `dev.toolchains` is on; every other server comes from the add-on. For Markdown, YAML and TOML the core holds grammars and Emacs 31's built-in modes only, so a server such as `taplo` still comes from the add-on.
 - Nothing global provides devenv: a devenv project's `.envrc` already begins with a `use flake` that exposes only `devenv`.
+- Emacs is the terminal-only `emacs31-nox` build (31.1, Eglot 1.24 bundled). The macport build existed for a GUI, which is out of scope.
 - The feature is `editor` (`renman-ymd.editor.enable`), with Home Manager options only. `.emacs-addon/` and `.wakatime-project` join the global ignore list, which jj reads from `$XDG_CONFIG_HOME/git/ignore`.
 - On the work machine the remove script stops the servers, deletes the launcher's state directory and lists any `.emacs-addon/` folders left in employer repositories (ticket 40).
 - This supersedes the map's separate Emacs config for the work machine and the daemon in the editor feature, and the heavy/light split in `PLAN.md` (tickets 11, 16, 17 and 36).

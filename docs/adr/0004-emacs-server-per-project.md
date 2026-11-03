@@ -13,7 +13,7 @@ Emacs runs as one server per project, started on demand by a Nushell launcher in
 ## Consequences
 
 - No buffers are shared across projects, each open project costs one extra Emacs process, and the first `em` in a project waits for direnv.
-- Real start-up time, memory use, language-server warm-up and macOS file-access (TCC) behaviour for a shell-started server are unmeasured on the Air. Ticket 34 measures them. If start-up proves too slow, the fallback is a shared daemon again; the editor core, the add-on flake and the pin carry over.
+- Ticket 34 measured start-up on the Air with `emacs31-nox` 31.1: the first `em` in a project takes 0.63 s with a cached dev shell and about 7 s once after its add-on changes, and later calls reuse the server (today's daemon config took 0.80 s). That is fast enough, so a shared daemon is no longer the fallback. Memory grows with each open project and is mostly its language server's (`rust-analyzer` took 1.1 GB on a Rust workspace), so a server stops itself after four hours with no frame attached, unless a file has unsaved changes.
 - If a shell-started server passes the TCC test, the Emacs launchd agent and the re-signed Emacs binary are dropped (ticket 39) and ticket 16 shrinks to nix-daemon, the app loop and pinentry-mac.
 - `direnv allow` covers only the `.envrc`, so the add-on's `.envrc` carries a hash of `flake.nix`, `flake.lock` and `addon.el`, checked by a function in a direnv library file. The pin gates starting a server; a running server keeps what it loaded.
 - Nothing global provides devenv: a devenv project's `.envrc` already begins with a `use flake` that exposes only `devenv`.

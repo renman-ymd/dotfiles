@@ -20,7 +20,7 @@ A machine owned by an employer. It carries only the work-machine config and no p
 ## Configuration
 
 **Toolbox**:
-The set of features available on one platform: home, darwin or NixOS. Every feature in it stays off until a recipe turns it on.
+The set of features available on one platform: home, darwin or NixOS. Every feature in it stays off until a host turns it on.
 
 **Feature**:
 One capability behind a single on/off switch, such as the shell, the editor or version control. A feature that spans platforms has one part per toolbox, all under the same name.

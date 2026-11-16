@@ -2,15 +2,33 @@
 let
   cfg = config.renman-ymd.editor;
 
+  emacsPackages = pkgs.emacs31-nox.pkgs;
+
+  grammars = emacsPackages.treesit-grammars.with-grammars (g: [
+    g.tree-sitter-markdown
+    g.tree-sitter-markdown-inline
+    g.tree-sitter-yaml
+    g.tree-sitter-toml
+  ]);
+
+  emacs = emacsPackages.withPackages (e: [
+    e.catppuccin-theme
+    e.nix-mode
+    e.nushell-mode
+    grammars
+  ]);
+
   editorArgs = [ "-nw" "--init-directory=${config.xdg.configHome}/emacs-light" ];
   editor = lib.concatStringsSep " " ([ "emacs" ] ++ editorArgs);
-  editorFromStore = [ "${config.programs.emacs.finalPackage}/bin/emacs" ] ++ editorArgs;
+  editorFromStore = [ "${emacs}/bin/emacs" ] ++ editorArgs;
 in
 {
   options.renman-ymd.editor.enable = lib.mkEnableOption "Emacs, its configuration and editor tooling";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
+      emacs
+      harper
       wakatime-cli # Private key to write to ~/.wakatime.cfg
       glibtool
     ];
@@ -67,12 +85,5 @@ in
         fi
       fi
     '';
-
-    # Configs are symlinked via xdg.configFile
-    # daemon is managed via launchd in modules/darwin/editor
-    programs.emacs = {
-      enable = true;
-      package = pkgs.emacs-macport;
-    };
   };
 }

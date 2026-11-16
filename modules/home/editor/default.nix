@@ -32,13 +32,6 @@ in
     programs.gh.settings.editor = lib.concatStringsSep " " editorFromStore;
 
     programs.nushell = {
-      shellAliases = {
-        emg = "emacsclient -s main -c";
-        eml = "emacs -nw --init-dir ~/.config/emacs-light";
-        # em-kill defined as def below: parenthesis interpretation
-        # em-restart defined as def below: string interpolation
-      };
-
       extraEnv = builtins.replaceStrings [ "@editor@" ] [ editor ] (builtins.readFile ./env.nu);
       extraConfig = lib.mkAfter (lib.concatStringsSep "\n" (
         [ (builtins.readFile ./config.nu) (builtins.readFile ./em.nu) ]

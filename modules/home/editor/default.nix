@@ -1,6 +1,10 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.renman-ymd.editor;
+
+  editorArgs = [ "-nw" "--init-directory=${config.xdg.configHome}/emacs-light" ];
+  editor = lib.concatStringsSep " " ([ "emacs" ] ++ editorArgs);
+  editorFromStore = [ "${config.programs.emacs.finalPackage}/bin/emacs" ] ++ editorArgs;
 in
 {
   options.renman-ymd.editor.enable = lib.mkEnableOption "Emacs, its configuration and editor tooling";
@@ -16,25 +20,21 @@ in
       "emacs/init.el".source = ./configs/emacs/init.el;
       "emacs-light/early-init.el".source = ./configs/emacs-light/early-init.el;
       "emacs-light/init.el".source = ./configs/emacs-light/init.el;
+      "direnv/lib/emacs-addon.sh".source = ./emacs-addon.sh;
     };
 
     programs.zsh.initContent = ''
-      export EDITOR='emacs -nw -Q'
-      export VISUAL='emacs -nw -Q'
+      export EDITOR='${editor}'
+      export VISUAL='${editor}'
     '';
 
-    programs.nushell = {
-      shellAliases = {
-        em = "emacsclient -s main -nw";
-        emg = "emacsclient -s main -c";
-        eml = "emacs -nw --init-dir ~/.config/emacs-light";
-        # em-kill defined as def below: parenthesis interpretation
-        # em-restart defined as def below: string interpolation
-      };
+    programs.jujutsu.settings.ui.editor = editorFromStore;
+    programs.gh.settings.editor = lib.concatStringsSep " " editorFromStore;
 
-      extraEnv = builtins.readFile ./env.nu;
+    programs.nushell = {
+      extraEnv = builtins.replaceStrings [ "@editor@" ] [ editor ] (builtins.readFile ./env.nu);
       extraConfig = lib.mkAfter (lib.concatStringsSep "\n" (
-        [ (builtins.readFile ./config.nu) ]
+        [ (builtins.readFile ./config.nu) (builtins.readFile ./em.nu) ]
         ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin (builtins.readFile ./em-restart.darwin.nu)
       ));
     };

@@ -28,6 +28,7 @@
 ;; │ 19. Keybindings                         │
 ;; │ 20. GUI-Specific Settings               │
 ;; │ 21. Daemon / Frame Hooks                │
+;; │ 22. Project Add-on                      │
 ;; └─────────────────────────────────────────┘
 ;;
 ;;; Code:
@@ -447,6 +448,10 @@
 
 ;; Emacs 30 has built-in treesit, but not the grammar libraries.
 ;; treesit-auto will auto-install grammars and remap major modes.
+
+(when-let* ((dir (getenv "EMACS_ADDON_TREESIT_DIR"))
+            ((file-directory-p dir)))
+  (add-to-list 'treesit-extra-load-path dir))
 
 (use-package treesit-auto
   :demand t
@@ -1101,6 +1106,16 @@
            (float-time (time-subtract after-init-time before-init-time))
            gcs-done))
 (add-hook 'emacs-startup-hook #'my/display-startup-time)
+
+;; ╔═══════════════════════════════════════════════════════════════════╗
+;; ║ 22. PROJECT ADD-ON                                                ║
+;; ╚═══════════════════════════════════════════════════════════════════╝
+
+(defvar my/addon-loaded nil)
+(when-let* ((file (getenv "EMACS_ADDON_INIT"))
+            ((file-readable-p file)))
+  (load file nil t)
+  (setq my/addon-loaded t))
 
 (provide 'init)
 ;;; init.el ends here

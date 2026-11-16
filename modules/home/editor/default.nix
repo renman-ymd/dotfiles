@@ -11,27 +11,51 @@ let
     g.tree-sitter-toml
   ]);
 
-  emacs = emacsPackages.withPackages (e: [
-    e.catppuccin-theme
-    e.nix-mode
-    e.nushell-mode
-    grammars
-  ]);
+  simpc-mode = emacsPackages.trivialBuild {
+    pname = "simpc-mode";
+    version = "0-unstable-2026-01-09";
+    src = pkgs.fetchFromGitHub {
+      owner = "rexim";
+      repo = "simpc-mode";
+      rev = "b4e851e38fad1b9ab3a52ea208f5ce3c4129ecf7";
+      hash = "sha256-G3FPAFwM5XVsEXIRD7kYdeWCFk47yr4MjS9Yktch4b0=";
+    };
+  };
+
+  emacs = emacsPackages.withPackages (e:
+    [
+      e.catppuccin-theme
+      e.nix-mode
+      e.nushell-mode
+      grammars
+    ]
+    ++ lib.optional cfg.c.enable simpc-mode
+    ++ lib.optional cfg.wakatime.enable e.wakatime-mode);
 
   editorArgs = [ "-nw" "--init-directory=${config.xdg.configHome}/emacs-light" ];
   editor = lib.concatStringsSep " " ([ "emacs" ] ++ editorArgs);
   editorFromStore = [ "${emacs}/bin/emacs" ] ++ editorArgs;
 in
 {
-  options.renman-ymd.editor.enable = lib.mkEnableOption "Emacs, its configuration and editor tooling";
+  options.renman-ymd.editor = {
+    enable = lib.mkEnableOption "Emacs, its configuration and editor tooling";
+
+    c.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = config.renman-ymd.dev.enable && config.renman-ymd.dev.toolchains.enable;
+      defaultText = lib.literalExpression "config.renman-ymd.dev.enable && config.renman-ymd.dev.toolchains.enable";
+      description = "Whether the editor core supports C, with simpc-mode and clangd.";
+    };
+
+    wakatime.enable = lib.mkEnableOption "WakaTime in Emacs; it needs a key in ~/.wakatime.cfg";
+  };
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
       emacs
       harper
-      wakatime-cli # Private key to write to ~/.wakatime.cfg
       glibtool
-    ];
+    ] ++ lib.optional cfg.wakatime.enable pkgs.wakatime-cli;
 
     xdg.configFile = {
       "emacs/early-init.el".source = ./configs/emacs/early-init.el;

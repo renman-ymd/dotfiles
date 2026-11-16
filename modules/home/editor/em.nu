@@ -83,7 +83,7 @@ module project-server {
     }
     let unsaved = (^emacsclient -s $server.sock -e $form | complete | get stdout | str trim)
     if ($unsaved | is-not-empty) {
-      let name = if $server.root == null { "the core server" } else { $"the server of ($server.root)" }
+      let name = if $server.root != null { $"the server of ($server.root)" } else if ($server.sock | path basename) == "em-core" { "the core server" } else { $"the server on ($server.sock)" }
       error make { msg: $"($name) has unsaved changes in ($unsaved | from json). Save them, or stop it anyway with --force" }
     }
   }
@@ -118,11 +118,44 @@ module project-server {
     ^emacsclient -s $server.sock -nw ...$paths
   }
 
+  def running []: nothing -> list<record> {
+    ls (socket-dir) | where type == socket | get name | where {|sock| up $sock } | each {|sock|
+      let root = (^emacsclient -s $sock -e '(getenv "EM_ROOT")' | str trim)
+      { root: (if $root == "nil" or ($sock | path basename) == "em-core" { null } else { $root | from json }), sock: $sock }
+    }
+  }
+
+  def tree-memory [processes: table, pid: int]: nothing -> filesize {
+    mut level = [$pid]
+    mut total = 0B
+    while ($level | is-not-empty) {
+      let pids = $level
+      $total = $total + ($processes | where pid in $pids | get mem | append 0B | math sum)
+      $level = ($processes | where ppid in $pids | get pid)
+    }
+    $total
+  }
+
+  # The running servers: the root of each (none for the core server), its socket, and its memory with the language servers it started.
+  export def em-list []: nothing -> table {
+    let processes = (ps)
+    running | each {|server|
+      let pid = (^emacsclient -s $server.sock -e "(emacs-pid)" | into int)
+      { root: $server.root, socket: $server.sock, memory: (tree-memory $processes $pid) }
+    }
+  }
+
   # Stop the server a path belongs to, or the core server with no path.
   export def em-stop [
+    --all    # every server
     --force  # even if a file has unsaved changes
     path?: path
   ] {
+    if $all {
+      let kept = (running | each {|server| try { stop $server $force; null } catch {|e| $e.msg } })
+      if ($kept | is-not-empty) { error make { msg: ($kept | str join "\n") } }
+      return
+    }
     stop (server-of (if $path == null { null } else { project-root $path })) $force
   }
 

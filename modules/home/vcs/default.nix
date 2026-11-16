@@ -130,7 +130,6 @@ in
         };
 
         ui = {
-          editor = "emacs -nw --init-dir ~/.config/emacs-light";
           default-command = [ "log" "-n" "10" ];
           graph.style = "square";
           # jj pipes into the pager, so read the width from the terminal itself
@@ -220,7 +219,6 @@ in
     programs.gh = {
       enable = true;
       settings.git_protocol = "ssh";
-      settings.editor = "emacs -nw --init-dir ~/.config/emacs-light";
     };
   };
 }

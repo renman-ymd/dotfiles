@@ -1,6 +1,10 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.renman-ymd.editor;
+
+  editorArgs = [ "-nw" "--init-directory=${config.xdg.configHome}/emacs-light" ];
+  editor = lib.concatStringsSep " " ([ "emacs" ] ++ editorArgs);
+  editorFromStore = [ "${config.programs.emacs.finalPackage}/bin/emacs" ] ++ editorArgs;
 in
 {
   options.renman-ymd.editor.enable = lib.mkEnableOption "Emacs, its configuration and editor tooling";
@@ -20,9 +24,12 @@ in
     };
 
     programs.zsh.initContent = ''
-      export EDITOR='emacs -nw -Q'
-      export VISUAL='emacs -nw -Q'
+      export EDITOR='${editor}'
+      export VISUAL='${editor}'
     '';
+
+    programs.jujutsu.settings.ui.editor = editorFromStore;
+    programs.gh.settings.editor = lib.concatStringsSep " " editorFromStore;
 
     programs.nushell = {
       shellAliases = {
@@ -32,7 +39,7 @@ in
         # em-restart defined as def below: string interpolation
       };
 
-      extraEnv = builtins.readFile ./env.nu;
+      extraEnv = builtins.replaceStrings [ "@editor@" ] [ editor ] (builtins.readFile ./env.nu);
       extraConfig = lib.mkAfter (lib.concatStringsSep "\n" (
         [ (builtins.readFile ./config.nu) (builtins.readFile ./em.nu) ]
         ++ lib.optional pkgs.stdenv.hostPlatform.isDarwin (builtins.readFile ./em-restart.darwin.nu)

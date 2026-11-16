@@ -22,6 +22,16 @@ let
     };
   };
 
+  extras = import ./extras.nix;
+
+  isOn = group: extra: cfg.extras.${group}.enable && cfg.extras.${group}.${extra}.enable;
+
+  enabledExtras = lib.concatLists (lib.mapAttrsToList
+    (group: members: lib.concatLists (lib.mapAttrsToList
+      (extra: spec: lib.optional (isOn group extra) { inherit group extra spec; })
+      members))
+    extras);
+
   emacs = emacsPackages.withPackages (e:
     [
       e.catppuccin-theme
@@ -30,7 +40,8 @@ let
       grammars
     ]
     ++ lib.optional cfg.c.enable simpc-mode
-    ++ lib.optional cfg.wakatime.enable e.wakatime-mode);
+    ++ lib.optional cfg.wakatime.enable e.wakatime-mode
+    ++ lib.concatMap (x: x.spec.packages e) enabledExtras);
 
   editorArgs = [ "-nw" "--init-directory=${config.xdg.configHome}/emacs-light" ];
   editor = lib.concatStringsSep " " ([ "emacs" ] ++ editorArgs);
@@ -48,6 +59,20 @@ in
     };
 
     wakatime.enable = lib.mkEnableOption "WakaTime in Emacs; it needs a key in ~/.wakatime.cfg";
+
+    extras = lib.mapAttrs
+      (group: members: {
+        enable = lib.mkEnableOption "the ${group} extras of the editor core";
+      } // lib.mapAttrs
+        (extra: spec: {
+          enable = lib.mkOption {
+            type = lib.types.bool;
+            default = !(spec ? needs) || isOn (lib.head spec.needs) (lib.last spec.needs);
+            description = "Whether the ${group} group includes ${extra}.";
+          };
+        })
+        members)
+      extras;
   };
 
   config = lib.mkIf cfg.enable {
@@ -57,7 +82,18 @@ in
       glibtool
     ] ++ lib.optional cfg.wakatime.enable pkgs.wakatime-cli;
 
-    xdg.configFile = {
+    assertions = map
+      (x: {
+        assertion = !(x.spec ? needs) || isOn (lib.head x.spec.needs) (lib.last x.spec.needs);
+        message = "renman-ymd.editor.extras.${x.group}.${x.extra} needs the extra ${lib.concatStringsSep "." (x.spec.needs or [ ])}.";
+      })
+      enabledExtras;
+
+    xdg.configFile = lib.listToAttrs (map
+      (x: lib.nameValuePair "emacs/extras/${x.group}/${x.extra}.el" {
+        source = ./configs/emacs/extras + "/${x.group}/${x.extra}.el";
+      })
+      enabledExtras) // {
       "emacs/early-init.el".source = ./configs/emacs/early-init.el;
       "emacs/init.el".source = ./configs/emacs/init.el;
       "emacs-light/early-init.el".source = ./configs/emacs-light/early-init.el;

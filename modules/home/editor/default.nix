@@ -106,7 +106,7 @@ in
       export VISUAL='${editor}'
     '';
 
-    programs.jujutsu.settings.ui.editor = editorFromStore;
+    programs.jujutsu.settings.ui.editor = [ "${emacs}/bin/emacs" "-nw" "-Q" "-l" "${./commit.el}" ];
     programs.gh.settings.editor = lib.concatStringsSep " " editorFromStore;
 
     programs.nushell = {

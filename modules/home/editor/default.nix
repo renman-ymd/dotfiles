@@ -43,7 +43,7 @@ let
     ++ lib.optional cfg.wakatime.enable e.wakatime-mode
     ++ lib.concatMap (x: x.spec.packages e) enabledExtras);
 
-  editorArgs = [ "-nw" "--init-directory=${config.xdg.configHome}/emacs-light" ];
+  editorArgs = [ "-nw" "--init-directory=${config.xdg.configHome}/emacs" ];
   editor = lib.concatStringsSep " " ([ "emacs" ] ++ editorArgs);
   editorFromStore = [ "${emacs}/bin/emacs" ] ++ editorArgs;
 in
@@ -96,8 +96,6 @@ in
       enabledExtras) // {
       "emacs/early-init.el".source = ./configs/emacs/early-init.el;
       "emacs/init.el".source = ./configs/emacs/init.el;
-      "emacs-light/early-init.el".source = ./configs/emacs-light/early-init.el;
-      "emacs-light/init.el".source = ./configs/emacs-light/init.el;
       "direnv/lib/emacs-addon.sh".source = ./emacs-addon.sh;
     };
 
